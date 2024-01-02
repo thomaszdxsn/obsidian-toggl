@@ -1,11 +1,11 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
-import type MyPlugin from "./main";
+import type TogglPlugin from "./main";
 
 
 export class SettingTab extends PluginSettingTab {
-	private plugin: MyPlugin;
+	private plugin: TogglPlugin;
 
-	constructor(app: App, plugin: MyPlugin) {
+	constructor(app: App, plugin: TogglPlugin) {
 		super(app, plugin);
 		this.plugin = plugin;
 	}
@@ -38,7 +38,21 @@ export class SettingTab extends PluginSettingTab {
 				.onChange(async (value) => {
 					this.plugin.settings.apiToken = value;
 					await this.plugin.saveSettings();
-					this.plugin.tickStatusBar()
-				}));
+					this.plugin.startTick()
+				}))
+
+		new Setting(containerEl)
+			.setName("Show in status bar")
+			.addToggle(toggle => toggle
+				.setValue(this.plugin.settings.showInStatusBar)
+				.onChange(async (value) => {
+					this.plugin.settings.showInStatusBar = value;
+					await this.plugin.saveSettings();
+					if (value) {
+						this.plugin.showStatusBarItem()
+					} else {
+						this.plugin.hideStatusBarItem()
+					}
+				}))
 	}
 }
