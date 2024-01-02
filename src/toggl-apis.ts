@@ -1,4 +1,5 @@
 import axios, { AxiosError, AxiosInstance } from 'axios'
+import { currentEntryAtom, meAtom, store } from './atoms'
 
 
 export class TogglAPI {
@@ -19,7 +20,7 @@ export class TogglAPI {
 		return response
 	}
 
-	async getMe(withRelatedData= true) {
+	async getMe(withRelatedData = true) {
 		const response = await this.client.get<Me>("v9/me", {
 			params: {
 				"with_related_data": withRelatedData.toString()
@@ -27,12 +28,17 @@ export class TogglAPI {
 		})
 		return response
 	}
+
+	async stopTimeEntry(timeEntry: TimeEntry) {
+		const response = await this.client.patch(
+			`v9/workspaces/${timeEntry.workspace_id}/time_entries/${timeEntry.id}/stop`,
+		)
+		return response
+	}
 }
 
 export class TogglService {
 	public api: TogglAPI
-	public currentEntry: TimeEntry | null = null
-	public me: Me | null = null
 
 	constructor(apiToken: string) {
 		this.api = new TogglAPI(apiToken)
@@ -40,29 +46,18 @@ export class TogglService {
 
 	private async fetchMe() {
 		return this.api.getMe().then(response => {
-			this.me = response.data
+			store.set(meAtom, response.data)
 		})
 	}
 
-	get currentEntryProject() {
-		const currentEntryProjectId = this.currentEntry?.project_id
-		if (!currentEntryProjectId) {
-			return
-		}
-		return this.projects.find(project => project.id === currentEntryProjectId)
-	}
-
-	get projects() {
-		return this.me?.projects ?? []
-	}
 
 	tick(errorHandler?: (error: AxiosError<string>) => void, intervalTime = 10000,) {
 		const intervalHandler = async (onError?: () => void) => {
 			try {
 				const response = await this.api.getCurrentTimeEntry()
-				this.currentEntry = response.data
+				store.set(currentEntryAtom, response.data)
 			} catch (error) {
-				this.currentEntry = null
+				store.set(currentEntryAtom, null)
 				if (errorHandler) {
 					errorHandler(error)
 				}

@@ -1,9 +1,9 @@
 import { Notice, Plugin, WorkspaceLeaf } from 'obsidian';
 import { SettingTab } from './setting-tab';
 import { TogglService } from './toggl-apis';
-import dayjs from 'dayjs'
-import { formatSeconds } from './utils';
 import { TogglView, VIEW_TYPE_TOGGL } from './views'
+import { Timer, currentEntryProjectAtom, passedTimeAtom, savedTimersAtom, store, tick } from './atoms';
+import { produce } from 'immer'
 
 interface PluginSettings {
 	apiToken: string;
@@ -15,9 +15,17 @@ export default class TogglPlugin extends Plugin {
 	public settings: PluginSettings;
 	public togglService: TogglService;
 	private statusBarItem: HTMLElement | null = null
+	private tickInterval: NodeJS.Timer | null = null
+	private statusUnsubscriber: (() => void) | null = null
+	private savedTimersUnsubscriber: (() => void) | null = null
+	private pluginData: PluginData;
 
 	async onload() {
-		await this.loadSettings();
+		this.pluginData = new PluginData(this);
+		await Promise.all([
+			this.loadSavedTimers(),
+			this.loadSettings()
+		])
 		this.addSettingTab(new SettingTab(this.app, this));
 		this.startTick()
 		this.showStatusBarItem()
@@ -38,18 +46,29 @@ export default class TogglPlugin extends Plugin {
 	}
 
 	onunload() {
-		this.app.workspace.getLeavesOfType(VIEW_TYPE_TOGGL).forEach((leaf) => leaf.detach())
+		if (this.tickInterval) {
+			clearInterval(this.tickInterval)
+		}
+		if (this.savedTimersUnsubscriber) {
+			this.savedTimersUnsubscriber()
+		}
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign({}, {
-			showInStatusBar: true,
-			apiToken: ""
-		}, await this.loadData());
+		this.settings = await this.pluginData.loadSettings()
+	}
+
+	async loadSavedTimers() {
+		const timers = await this.pluginData.loadTimers()
+		store.set(savedTimersAtom, timers)
+		this.savedTimersUnsubscriber = store.sub(savedTimersAtom, () => {
+			const timers = store.get(savedTimersAtom)
+			this.pluginData.saveTimers(timers)
+		})
 	}
 
 	async saveSettings() {
-		await this.saveData(this.settings);
+		await this.pluginData.saveSettings(this.settings);
 	}
 
 	async initView() {
@@ -77,28 +96,79 @@ export default class TogglPlugin extends Plugin {
 				new Notice(`Toggl API Error: ${error.response.data}`, 3000)
 			}
 		});
+		this.tickInterval = tick()
 	}
 
 	showStatusBarItem() {
 		const statusBarItem = this.addStatusBarItem();
 		this.statusBarItem = statusBarItem
-		setInterval(() => {
-			const currentEntry = this.togglService.currentEntry
-			if (!currentEntry) {
+		this.statusUnsubscriber = store.sub(passedTimeAtom, () => {
+			const passedTime = store.get(passedTimeAtom)
+			if (!passedTime) {
 				statusBarItem.setText("--")
 				return
-			} else {
-				const passedSeconds = dayjs().diff(dayjs(currentEntry.start), 'second')
-				const projectName = this.togglService.currentEntryProject?.name ?? ""
-				const text = [projectName, formatSeconds(passedSeconds)].filter(Boolean).join("-")
-				statusBarItem.setText(text)
-				statusBarItem.title = currentEntry.description ?? ""
 			}
+			const projectName = store.get(currentEntryProjectAtom)?.name ?? ""
+			const text = [projectName, passedTime].filter(Boolean).join("-")
+			statusBarItem.setText(text)
 		})
 	}
 
 	hideStatusBarItem() {
 		this.statusBarItem?.remove()
 		this.statusBarItem = null
+		this.statusUnsubscriber?.()
+		this.statusUnsubscriber = null
+	}
+}
+
+
+interface Data {
+	settings?: PluginSettings;
+	savedTimers?: Timer[]
+}
+
+class PluginData {
+	plugin: TogglPlugin;
+	static DEFAULT_SETTINGS: PluginSettings = {
+		apiToken: "",
+		showInStatusBar: true
+	}
+
+	constructor(plugin: TogglPlugin) {
+		this.plugin = plugin;
+	}
+
+	async getData(): Promise<Data> {
+		return this.plugin.loadData() as Promise<Data>;
+	}
+
+	async saveData(data: Data): Promise<void> {
+		await this.plugin.saveData(data);
+	}
+
+	async saveSettings(settings: PluginSettings): Promise<void> {
+		await this.saveData(produce(await this.getData(), draft => {
+			draft.settings = settings
+			return draft
+		}))
+	}
+
+	async saveTimers(timers: Timer[]): Promise<void> {
+		await this.saveData(produce(await this.getData(), draft => {
+			draft.savedTimers = timers
+			return draft
+		}))
+
+	}
+
+	async loadSettings(): Promise<PluginSettings> {
+		const data = await this.getData();
+		return data.settings ?? PluginData.DEFAULT_SETTINGS;
+	}
+
+	async loadTimers(): Promise<Timer[]> {
+		const data = await this.getData();
+		return data.savedTimers ?? [];
 	}
 }
