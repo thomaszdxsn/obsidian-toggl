@@ -22,6 +22,11 @@ export const passedTimeAtom = atom<string | null>(get => {
 
 export const meAtom = atom<Me | null>(null)
 
+export const tagsAtom = atom<Me["tags"]>(get => {
+	const me = get(meAtom)
+	return me?.tags ?? []
+})
+
 export const projectsAtom = atom<Me["projects"]>(get => {
 	const me = get(meAtom)
 	return me?.projects ?? []

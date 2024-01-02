@@ -4,10 +4,10 @@ import { Root, createRoot } from 'react-dom/client'
 import { ItemView, WorkspaceLeaf } from 'obsidian'
 import TogglPlugin from './main'
 import { createContext } from 'react'
-import { currentEntryAtom, currentEntryProjectAtom, passedTimeAtom, store } from './atoms'
+import { currentEntryAtom, currentEntryProjectAtom, passedTimeAtom, savedTimersAtom, store } from './atoms'
 import { QueryClient, QueryClientProvider, useMutation } from '@tanstack/react-query'
 import { TimeEntry } from './interfaces'
-import { TimerDetailModal } from './modal'
+import { TimerDetailModal, TimerListModal } from './modal'
 
 export const VIEW_TYPE_TOGGL = 'toggl'
 
@@ -110,7 +110,8 @@ export const CurrentTimer = () => {
 }
 
 export const Content = () => {
-	const app = usePlugin().app
+	const plugin = usePlugin()
+	const app = plugin.app
 	const onClick = () => {
 		const modal = new TimerDetailModal(app)
 		modal.open()
@@ -118,8 +119,7 @@ export const Content = () => {
 	return (
 		<section>
 			<button onClick={onClick}>Add Timer</button>
+			<TimerListModal.Content plugin={plugin} />
 		</section>
 	)
 }
-
-

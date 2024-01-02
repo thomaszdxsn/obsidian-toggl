@@ -168,9 +168,9 @@ export interface TimeEntryConstraints {
 
 
 export interface Timer {
-	project_id: number
-	project_name: string
+	projectId: number
+	projectName: string
 	description: string
 	tags: string[]
-	tag_ids: number[]
+	tagIds: number[]
 }

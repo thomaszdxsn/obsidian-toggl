@@ -5,6 +5,7 @@ import { TogglView, VIEW_TYPE_TOGGL } from './views'
 import { currentEntryProjectAtom, passedTimeAtom, savedTimersAtom, store, tick } from './atoms';
 import { Timer } from './interfaces'
 import { produce } from 'immer'
+import { TimerListModal } from './modal';
 
 interface PluginSettings {
 	apiToken: string;
@@ -37,6 +38,15 @@ export default class TogglPlugin extends Plugin {
 		this.addRibbonIcon("dice", 'Activate Toggl View', () => {
 			this.initView()
 		})
+		this.addCommand({
+			id: "start-timer",
+			name: "Start Timer",
+			callback: () => {
+				new TimerListModal(this.app, this).open()
+			}
+		})
+
+
 		if (this.app.workspace.layoutReady) {
 			await this.initView();
 		} else {

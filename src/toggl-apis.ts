@@ -36,6 +36,71 @@ export class TogglAPI {
 		)
 		return response
 	}
+
+	async createTimeEntry({
+		workspaceId,
+		duration=-1,
+		duronly,
+		pid,
+		projectId,
+		billable,
+		createdWith,
+		description,
+		start,
+		startDate,
+		stop,
+		tagAction,
+		tagIds,
+		tags,
+		taskId,
+		tid,
+		uid,
+		userId,
+		wid
+	}: {
+		workspaceId: number, 
+		billable: boolean,
+		createdWith: string
+		description: string
+		duration?: number
+		duronly?: boolean
+		pid?: number
+		projectId: number
+		start: string
+		startDate?: string,
+		stop?: string,
+		tagAction?: "add" | "delete",
+		tagIds: number[]
+		tags: string[];
+		taskId?: number
+		tid?: number,
+		uid?: number,
+		userId?: number
+		wid?: number
+	}) {
+		const response = await this.client.post<TimeEntry>(`v9/workspaces/${workspaceId}/time_entries`, {
+				workspace_id: workspaceId,
+				duration,
+				duronly,
+				pid,
+				project_id: projectId,
+				billable,
+				created_with: createdWith,
+				description,
+				start,
+				start_date: startDate,
+				stop,
+				tag_action: tagAction,
+				tag_ids: tagIds,
+				tags: tags,
+				task_id: taskId,
+				tid,
+				uid,
+				user_id: userId,
+				wid
+		})
+		return response
+	}
 }
 
 export class TogglService {
