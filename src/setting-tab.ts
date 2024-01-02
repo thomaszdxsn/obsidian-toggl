@@ -38,6 +38,7 @@ export class SettingTab extends PluginSettingTab {
 				.onChange(async (value) => {
 					this.plugin.settings.apiToken = value;
 					await this.plugin.saveSettings();
+					this.plugin.tickStatusBar()
 				}));
 	}
 }
