@@ -1,15 +1,8 @@
 import { atom, createStore } from "jotai";
-import type { Me, TimeEntry } from "./toggl-apis";
+import type { Me, TimeEntry, Timer } from "./interfaces";
 import dayjs from "dayjs";
 import { formatSeconds } from "./utils";
 
-export interface Timer {
-	project_id: number
-	project_name: string
-	description: string
-	tags: string[]
-	tag_ids: number[]
-}
 
 export const store = createStore();
 
@@ -32,6 +25,11 @@ export const meAtom = atom<Me | null>(null)
 export const projectsAtom = atom<Me["projects"]>(get => {
 	const me = get(meAtom)
 	return me?.projects ?? []
+})
+
+export const activeProjectsAtom = atom(get => {
+	const projects = get(projectsAtom)
+	return projects.filter(project => project.active)
 })
 
 export const currentEntryProjectAtom = atom(get => {

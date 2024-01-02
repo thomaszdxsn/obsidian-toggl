@@ -6,7 +6,8 @@ import TogglPlugin from './main'
 import { createContext } from 'react'
 import { currentEntryAtom, currentEntryProjectAtom, passedTimeAtom, store } from './atoms'
 import { QueryClient, QueryClientProvider, useMutation } from '@tanstack/react-query'
-import { TimeEntry } from './toggl-apis'
+import { TimeEntry } from './interfaces'
+import { TimerDetailModal } from './modal'
 
 export const VIEW_TYPE_TOGGL = 'toggl'
 
@@ -39,7 +40,10 @@ export class TogglView extends ItemView {
 				<Provider store={store}>
 					<QueryClientProvider client={queryClient}>
 						<PluginContext.Provider value={this.plugin}>
-							<CurrentTimer />
+							<main>
+								<CurrentTimer />
+								<Content />
+							</main>
 						</PluginContext.Provider>
 					</QueryClientProvider>
 				</Provider>
@@ -102,6 +106,19 @@ export const CurrentTimer = () => {
 				<div>{passed}</div>
 			</div>
 		</ div >
+	)
+}
+
+export const Content = () => {
+	const app = usePlugin().app
+	const onClick = () => {
+		const modal = new TimerDetailModal(app)
+		modal.open()
+	}
+	return (
+		<section>
+			<button onClick={onClick}>Add Timer</button>
+		</section>
 	)
 }
 
