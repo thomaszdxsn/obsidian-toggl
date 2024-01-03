@@ -5,8 +5,10 @@ import React, { StrictMode, useMemo } from 'react'
 import { Root, createRoot } from "react-dom/client";
 import { activeProjectsAtom, currentEntryAtom, meAtom, projectsAtom, savedTimersAtom, store, tagsAtom } from "./atoms";
 import { useForm } from "react-hook-form";
-import { Project } from "./interfaces";
+import { Project, Timer } from "./interfaces";
 import type TogglPlugin from "./main";
+import { css } from "@emotion/css";
+import { ClipLoader } from "react-spinners";
 
 export class TimerDetailModal extends Modal {
 	private root: Root | null = null
@@ -20,12 +22,12 @@ export class TimerDetailModal extends Modal {
 		this.root = createRoot(contentEl)
 		const queryClient = new QueryClient()
 		const Content = TimerDetailModal.Content
-		const close = this.close.bind(this)
+		const closeModal = this.close.bind(this)
 		this.root.render(
 			<StrictMode>
 				<Provider store={store}>
 					<QueryClientProvider client={queryClient}>
-						<Content close={close} />
+						<Content closeModal={closeModal} />
 					</QueryClientProvider>
 				</Provider>
 			</StrictMode>
@@ -37,7 +39,7 @@ export class TimerDetailModal extends Modal {
 		contentEl.empty();
 	}
 
-	static Content = ({ close }: { close: () => void }) => {
+	static Content = ({ closeModal: close }: { closeModal: () => void }) => {
 		const form = useForm<{
 			projectId: string;
 			tagIds: string[]
@@ -71,27 +73,73 @@ export class TimerDetailModal extends Modal {
 					close()
 				})}
 			>
-				<label>
-					<span>Project: </span>
-					<select {...form.register("projectId")} aria-placeholder="Project" >
+				<label
+					className={css`
+						display: flex;
+						flex-direction: column;
+						gap: var(--size-4-1);
+					`}
+				>
+					<span>Project</span>
+					<select {...form.register("projectId")} aria-placeholder="Project"
+					>
 						{projectOptions}
 					</select>
 				</label>
-				<label>
-					<span>Description: </span>
+				<label
+
+					className={css`
+						display: flex;
+						flex-direction: column;
+						gap: var(--size-4-1);
+					`}
+				>
+					<span>Description</span>
 					<input {...form.register("description")} placeholder="Description" />
 				</label>
-				<label>
-					<span>Tags: </span>
-					<select {...form.register("tagIds")} aria-placeholder="Tags" multiple >
+				<label
+					className={css`
+						display: flex;
+						flex-direction: column;
+						gap: var(--size-4-1);
+					`}
+				>
+					<span>Tags</span>
+					<select {...form.register("tagIds")} aria-placeholder="Tags" multiple 
+						className={css`
+							height: 120px;
+						`}
+					>
 						<option value="" disabled>Tags</option>
 						{tagOptions}
 					</select>
 				</label>
 
-				<footer>
-					<button onClick={close}>Cancel</button>
-					<button type="submit">Save</button>
+				<footer className={
+					css`
+						display: flex;
+						gap: var(--size-4-2);
+						justify-content: center;
+					`
+				}>
+					<button
+						onClick={close}
+						disabled={form.formState.isSubmitting}
+						className={css`
+							cursor: pointer;
+						`}
+					>
+						Cancel
+					</button>
+					<button
+						type="submit"
+						disabled={form.formState.isSubmitting}
+						className={css`
+							cursor: pointer;
+						`}
+					>
+						Save
+					</button>
 				</footer>
 			</form>
 		)
@@ -118,7 +166,12 @@ export class TimerListModal extends Modal {
 			<StrictMode>
 				<Provider store={store}>
 					<QueryClientProvider client={queryClient}>
-						<Content plugin={this.plugin} close={close} />
+						<div className={css`
+							margin-top: var(--size-4-4);
+						`}>
+
+							<Content plugin={this.plugin} closeModal={close} />
+						</div>
 					</QueryClientProvider>
 				</Provider>
 			</StrictMode>
@@ -130,30 +183,45 @@ export class TimerListModal extends Modal {
 		contentEl.empty();
 	}
 
-	static Content = ({ plugin, close }: { plugin: TogglPlugin, close?: () => void }) => {
-		const me = useAtomValue(meAtom)
+	static Content = ({ plugin, closeModal }: { plugin: TogglPlugin, closeModal?: () => void }) => {
 		const timers = useAtomValue(savedTimersAtom)
 		const projects = useAtomValue(projectsAtom)
 		const projectDict = useMemo(() => Object.fromEntries(
 			projects.map(project => [project.id, project])
 		), [projects])
 		const findProject = (projectId: number): Project | undefined => projectDict[projectId]
+
+		return (
+			<div className={css`
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: var(--size-4-1);
+			`}>
+				{timers.map((timer, index) => {
+					const project = findProject(timer.projectId)
+					return <TimerListModal.TimerCard closeModal={closeModal} key={index} timer={timer} project={project} plugin={plugin} />
+				})}
+			</div>
+		)
+	}
+
+	static TimerCard = ({ timer, plugin, project, closeModal }: { timer: Timer, project?: Project, plugin: TogglPlugin, closeModal?: () => void }) => {
+		const me = useAtomValue(meAtom)
 		const mutationFn = plugin.togglService.api.createTimeEntry.bind(
 			plugin.togglService.api
 		) as typeof plugin.togglService.api.createTimeEntry
 		const setCurrentEntry = useSetAtom(currentEntryAtom)
-
 		const mutation = useMutation(
 			{
 				mutationFn,
 				onSuccess: (entry) => {
 					setCurrentEntry(entry.data)
-					close?.()
+					closeModal?.()
 				}
 			}
 		)
 
-		const onStart = (timer: typeof timers[0]) => {
+		const onStart = (timer: Timer) => {
 			mutation.mutate({
 				...timer,
 				workspaceId: me!.default_workspace_id,
@@ -162,25 +230,48 @@ export class TimerListModal extends Modal {
 				createdWith: "obsidian-toggl-plugin"
 			})
 		}
-
 		return (
-			<ul>
-				{timers.map((timer, index) => {
-					const project = findProject(timer.projectId)
-					return <li key={index} style={{
-						display: "flex",
-						gap: "1rem"
-					}}>
-						<button onClick={() => onStart(timer)}>Start</button>
-						<div>
-							<div style={{ color: project?.color }}>{timer.projectName}</div>
-							<div>{timer.description}</div>
-							<div>{timer.tags.join(",")}</div>
-						</div>
-					</li>
-				})}
-			</ul>
+			<section className={css`
+						background: var(--background-modifier-form-field);
+						padding: var(--size-4-2);
+						display: flex;
+						flex-direction: column;
+						gap: var(--size-4-2);
+						border-radius: var(--radius-m);
+					`}>
+				<div className={css`
+						display: flex;
+						flex-direction: column;
+				`}>
+					<div style={{ color: project?.color }}>{timer.projectName}</div>
+					<div
+						className={css`
+							font-size: var(--font-smallest);
+							color: var(--text-muted);
+						`}
+					>{timer.description}</div>
+					<div className={css`
+						font-size: var(--font-ui-smaller);
+						color: var(--text-accent);
+					`}>{timer.tags.join(",")}</div>
+				</div>
+				<button onClick={() => onStart(timer)}
+					disabled={mutation.isPending}
+					className={css`
+						cursor: ${mutation.isPending ? "wait" : "pointer"}
+					`}
+				>
+					{mutation.isPending ? (
+						<ClipLoader size={24}
+							cssOverride={{
+								borderColor: "var(--accent-h)",
+							}}
+						/>
+					) : "Start"}
+				</button>
+			</section>
 		)
+
 	}
 }
 
