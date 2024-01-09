@@ -151,7 +151,7 @@ class PluginData {
 	}
 
 	async getData(): Promise<Data> {
-		return this.plugin.loadData() as Promise<Data>;
+		return this.plugin.loadData() as Promise<Data> ?? {}
 	}
 
 	async saveData(data: Data): Promise<void> {
@@ -180,6 +180,6 @@ class PluginData {
 
 	async loadTimers(): Promise<Timer[]> {
 		const data = await this.getData();
-		return data.savedTimers ?? [];
+		return data?.savedTimers ?? [];
 	}
 }
