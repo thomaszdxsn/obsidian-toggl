@@ -151,7 +151,7 @@ class PluginData {
 	}
 
 	async getData(): Promise<Data> {
-		return this.plugin.loadData() as Promise<Data> ?? {}
+		return (this.plugin.loadData().then(data => data ?? {})) as Promise<Data>
 	}
 
 	async saveData(data: Data): Promise<void> {
