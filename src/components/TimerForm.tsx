@@ -4,6 +4,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form';
 import { FiCornerUpLeft } from 'react-icons/fi';
 import { activeProjectsAtom, savedTimersAtom, tagsAtom } from '../atoms';
+import { Button } from './Button';
 
 interface Props {
   onSuccess: () => void
@@ -93,7 +94,7 @@ export const TimerForm = ({ onSuccess }: Props) => {
           justify-content: center;
         `
       }>
-        <button
+        <Button
           type="submit"
           disabled={form.formState.isSubmitting}
           className={css`
@@ -101,7 +102,7 @@ export const TimerForm = ({ onSuccess }: Props) => {
           `}
         >
           <FiCornerUpLeft />
-        </button>
+        </Button>
       </footer>
     </form>
   )

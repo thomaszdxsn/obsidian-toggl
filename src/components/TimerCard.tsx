@@ -7,6 +7,7 @@ import TogglPlugin from "../main"
 import { css } from "@emotion/css"
 import ClipLoader from "react-spinners/ClipLoader"
 import { FiPlay } from "react-icons/fi"
+import { Button } from "./Button"
 
 interface Props {
   timer: Timer
@@ -66,20 +67,14 @@ export const TimerCard = ({ timer, plugin, project, onSuccess }: Props) => {
           color: var(--text-accent);
         `}>{timer.tags.join(",")}</div>
       </div>
-      <button onClick={() => onStart(timer)}
-        disabled={mutation.isPending}
+      <Button onClick={() => onStart(timer)}
+        isLoading={mutation.isPending}
         className={css`
           cursor: ${mutation.isPending ? "wait" : "pointer"}
         `}
       >
-        {mutation.isPending ? (
-          <ClipLoader size={24}
-            cssOverride={{
-              borderColor: "var(--accent-h)",
-            }}
-          />
-        ) : <FiPlay />}
-      </button>
+        <FiPlay />
+      </Button>
     </section>
   )
 }

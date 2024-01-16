@@ -5,6 +5,8 @@ import { currentEntryAtom, currentEntryProjectAtom, passedSecondsAtom, passedTim
 import { css } from '@emotion/css'
 import ClipLoader from 'react-spinners/ClipLoader'
 import { FiPause } from 'react-icons/fi'
+import { TimeDisplay } from './TimeDisplay'
+import { Button } from './Button'
 
 export const CurrentTimer = ({ placeholder = "No time entry running" }: { placeholder?: string }) => {
   const stopTimerMutation = useStopTimerMutation()
@@ -46,23 +48,17 @@ export const CurrentTimer = ({ placeholder = "No time entry running" }: { placeh
 				height: 100px;
 			`}
     >
-      <button
+      <Button
         onClick={onStop}
-        disabled={stopTimerMutation.isPending}
+        isLoading={stopTimerMutation.isPending}
         className={css`
 					flex: 1;
 					cursor: ${stopTimerMutation.isPending ? "wait" : "pointer"};
           margin-bottom: var(--size-4-2);
 				`}
       >
-        {stopTimerMutation.isPending ? (
-          <ClipLoader size={24}
-            cssOverride={{
-              borderColor: "var(--accent-h)",
-            }}
-          />
-        ) : <FiPause />}
-      </button>
+        <FiPause />
+      </Button>
       <div className={css`
 			display: flex;
 			justify-content: space-between;
@@ -82,13 +78,14 @@ export const CurrentTimer = ({ placeholder = "No time entry running" }: { placeh
 						`}
           >{currentEntry.description}</div>}
         </div>
-        <div className={css`
-					font-size: var(--font-ui-large);
-					font-weight: var(--font-semibold);
-					font-variant-numeric: tabular-nums;
-				`}>
+        <TimeDisplay
+          className={css`
+          font-size: var(--font-ui-large);
+          font-weight: var(--font-semibold);
+          `}
+        >
           {passed}
-        </div>
+        </TimeDisplay>
       </ div >
     </div>
   )

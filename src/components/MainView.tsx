@@ -5,6 +5,7 @@ import { TimerDetailModal } from "../plugin/modal"
 import { CurrentTimer } from "./CurrentTimer"
 import { TimerList } from "./TimerList"
 import { FiPlus } from 'react-icons/fi'
+import { Button } from "./Button"
 
 export const MainView = () => {
   const plugin = usePlugin()
@@ -27,7 +28,7 @@ export const MainView = () => {
 				flex-direction: column;
 				gap: var(--size-4-2);
 			`}>
-        <button onClick={onClick}
+        <Button onClick={onClick}
           className={css`
 						display: block;
 						margin-left: auto;
@@ -35,7 +36,7 @@ export const MainView = () => {
 					`}
         >
           <FiPlus />
-        </button>
+        </Button>
         <TimerList plugin={plugin} />
       </section>
     </div>
