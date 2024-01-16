@@ -23,7 +23,7 @@ export const MainView = () => {
       className={css`
 				display: flex;
 				flex-direction: column;
-				gap: var(--size-4-4);
+				gap: var(--size-4-2);
 			`}
     >
       <TodayTimeline />
@@ -54,28 +54,30 @@ export const TodayTimeline = () => {
   const entries = useAtomValue(todayTimeEntriesAtom)
   const projectDict = useAtomValue(projectDictAtom)
   const timelineItems = useMemo(() => {
-    const dayMilliSeconds = 24 * 60 * 60 * 1000
-    return entries.filter((entry): entry is (typeof entry & { project_id: string }) => !!entry.project_id).map(entry => {
-      const project = projectDict[entry.project_id]
-      const duration = entry.duration !== -1 ? entry.duration : dayjs().diff(entry.start, "millisecond")
-      const percentage = duration / dayMilliSeconds
+    const total = entries.reduce((acc, entry) => {
+      const duration = entry.duration !== -1 ? entry.duration : dayjs().diff(entry.start, "second")
+      return acc + duration
+    }, 0)
+    return entries.sort((a, b) => a.start < b.start ? - 1 : 1).map(entry => {
+      const project = entry.project_id ? projectDict[entry.project_id] : null
+      const duration = entry.duration !== -1 ? entry.duration : dayjs().diff(entry.start, "second")
+      const percentage = duration / total
       return {
-        color: project.color,
-        label: project.name,
+        color: project?.color || "var(--background-primary)",
+        label: project?.name,
         percentage: percentage
       }
     })
 
   }, [entries, projectDict])
   return (
-    <div>
-      <div className={css`
+    <div className={css`
         background: var(--background-primary);
         border-start-end-radius: 1rem;
         border-end-end-radius: 1rem;
+        flex: 1;
       `}>
-        <Timeline items={timelineItems} direction="horizontal" showLabel={false} size="medium" />
-      </div>
+      <Timeline items={timelineItems} direction="horizontal" showLabel={false} />
     </div>
   )
 }
