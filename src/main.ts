@@ -1,7 +1,7 @@
 import { Notice, Plugin, WorkspaceLeaf } from 'obsidian';
 import { SettingTab } from './setting-tab';
 import { TogglService } from './toggl-apis';
-import { TogglView, VIEW_TYPE_TOGGL } from './views'
+import { TogglView, VIEW_TYPE_TOGGL } from './plugin/views'
 import { currentEntryProjectAtom, passedTimeAtom, savedTimersAtom, store, tick } from './atoms';
 import { Timer } from './interfaces'
 import { produce } from 'immer'
