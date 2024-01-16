@@ -37,6 +37,11 @@ export const activeProjectsAtom = atom(get => {
 	return projects.filter(project => project.active)
 })
 
+export const projectDictAtom = atom(get => {
+	const projects = get(projectsAtom)
+	return Object.fromEntries(projects.map(project => [project.id, project]))
+})
+
 export const currentEntryProjectAtom = atom(get => {
 	const currentEntry = get(currentEntryAtom)
 	const projects = get(projectsAtom)
@@ -58,3 +63,13 @@ export const tick = () => {
 	}, 1000)
 	return interval
 }
+
+const myTimeEntriesAtom = atom(get => {
+	const me = get(meAtom)
+	return me?.time_entries ?? []
+})
+
+export const todayTimeEntriesAtom = atom(get => {
+	const entries = get(myTimeEntriesAtom)
+	return entries.filter(entry => dayjs().isSame(entry.start, 'day'))
+})

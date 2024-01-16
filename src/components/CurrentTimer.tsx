@@ -1,9 +1,8 @@
 import React from 'react'
 import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import { useStopTimerMutation } from "../hooks"
-import { currentEntryAtom, currentEntryProjectAtom, passedSecondsAtom, passedTimeAtom } from "../atoms"
+import { currentEntryAtom, currentEntryProjectAtom, passedSecondsAtom, passedTimeAtom, todayTimeEntriesAtom } from "../atoms"
 import { css } from '@emotion/css'
-import ClipLoader from 'react-spinners/ClipLoader'
 import { FiPause } from 'react-icons/fi'
 import { TimeDisplay } from './TimeDisplay'
 import { Button } from './Button'

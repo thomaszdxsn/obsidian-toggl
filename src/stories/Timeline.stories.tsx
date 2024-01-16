@@ -40,6 +40,7 @@ export const Vertical: Story = {
     ],
     className: css`
       height: 400px;
+      
     `,
     size: "large"
   },

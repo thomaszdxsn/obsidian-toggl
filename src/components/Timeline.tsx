@@ -34,13 +34,13 @@ export const Timeline = ({ className, direction, gap = 0, showLabel = true, roun
         const radiusValue = rounded ? "1rem" : "0"
         const horizontalStyle = {
           height: SIZE_MAP[size],
-          ...(index === 0 ? { "border-start-start-radius": radiusValue, "border-end-start-radius": radiusValue } : {}),
-          ...(index === items.length - 1 && finished ? { "border-start-end-radius": radiusValue, "border-end-end-radius": radiusValue } : {}),
+          ...(index === 0 ? { borderStartStartRadius: radiusValue, borderEndStartRadius: radiusValue } : {}),
+          ...(index === items.length - 1 && finished ? { borderStartEndRadius: radiusValue, borderEndEndRadius: radiusValue } : {}),
         }
         const verticalStyle = {
           width: SIZE_MAP[size],
-          ...(index === 0 ? { "border-start-start-radius": radiusValue, "border-start-end-radius": radiusValue } : {}),
-          ...(index === items.length - 1 && finished ? { "border-end-start-radius": radiusValue, "border-end-end-radius": radiusValue } : {}),
+          ...(index === 0 ? { borderStartStartRadius: radiusValue, borderStartEndRadius: radiusValue } : {}),
+          ...(index === items.length - 1 && finished ? { borderEndStartRadius: radiusValue, borderEndEndRadius: radiusValue } : {}),
         }
         const style = {
           backgroundColor: item.color,
@@ -57,9 +57,11 @@ export const Timeline = ({ className, direction, gap = 0, showLabel = true, roun
           flex-direction: ${direction === "horizontal" ? "column" : "row"};
         `}>
           <div key={index} style={style} />
-          <div>
-            {item.label}
-          </div>
+          {showLabel && (
+            <div>
+              {item.label}
+            </div>
+          )}
         </div>
       })}
     </div>
