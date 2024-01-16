@@ -2,6 +2,7 @@ import { css } from '@emotion/css';
 import { useAtomValue, useSetAtom } from 'jotai';
 import React from 'react'
 import { useForm } from 'react-hook-form';
+import { FiCornerUpLeft } from 'react-icons/fi';
 import { activeProjectsAtom, savedTimersAtom, tagsAtom } from 'src/atoms';
 
 interface Props {
@@ -99,7 +100,7 @@ export const TimerForm = ({ onSuccess }: Props) => {
             cursor: pointer;
           `}
         >
-          Save
+          <FiCornerUpLeft />
         </button>
       </footer>
     </form>

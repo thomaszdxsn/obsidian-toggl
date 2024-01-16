@@ -6,6 +6,7 @@ import { Project, Timer } from "src/interfaces"
 import TogglPlugin from "src/main"
 import { css } from "@emotion/css"
 import ClipLoader from "react-spinners/ClipLoader"
+import { FiPlay } from "react-icons/fi"
 
 interface Props {
   timer: Timer
@@ -77,7 +78,7 @@ export const TimerCard = ({ timer, plugin, project, onSuccess }: Props) => {
               borderColor: "var(--accent-h)",
             }}
           />
-        ) : "Start"}
+        ) : <FiPlay />}
       </button>
     </section>
   )

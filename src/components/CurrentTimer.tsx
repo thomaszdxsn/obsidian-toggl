@@ -4,6 +4,7 @@ import { useStopTimerMutation } from "../hooks"
 import { currentEntryAtom, currentEntryProjectAtom, passedSecondsAtom, passedTimeAtom } from "src/atoms"
 import { css } from '@emotion/css'
 import ClipLoader from 'react-spinners/ClipLoader'
+import { FiPause } from 'react-icons/fi'
 
 export const CurrentTimer = ({ placeholder = "No time entry running" }: { placeholder?: string }) => {
   const stopTimerMutation = useStopTimerMutation()
@@ -50,7 +51,8 @@ export const CurrentTimer = ({ placeholder = "No time entry running" }: { placeh
         disabled={stopTimerMutation.isPending}
         className={css`
 					flex: 1;
-					cursor: ${stopTimerMutation.isPending ? "not-allowed" : "pointer"};
+					cursor: ${stopTimerMutation.isPending ? "wait" : "pointer"};
+          margin-bottom: var(--size-4-2);
 				`}
       >
         {stopTimerMutation.isPending ? (
@@ -59,7 +61,7 @@ export const CurrentTimer = ({ placeholder = "No time entry running" }: { placeh
               borderColor: "var(--accent-h)",
             }}
           />
-        ) : "Stop"}
+        ) : <FiPause />}
       </button>
       <div className={css`
 			display: flex;

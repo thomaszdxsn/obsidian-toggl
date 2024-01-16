@@ -4,6 +4,7 @@ import { usePlugin } from "src/hooks"
 import { TimerDetailModal } from "src/plugin/modal"
 import { CurrentTimer } from "./CurrentTimer"
 import { TimerList } from "./TimerList"
+import { FiPlus } from 'react-icons/fi'
 
 export const MainView = () => {
   const plugin = usePlugin()
@@ -32,7 +33,9 @@ export const MainView = () => {
 						margin-left: auto;
 						cursor: pointer;
 					`}
-        >Add Timer</button>
+        >
+          <FiPlus />
+        </button>
         <TimerList plugin={plugin} />
       </section>
     </div>
