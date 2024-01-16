@@ -3,7 +3,7 @@ import { useAtomValue, useSetAtom } from 'jotai';
 import React from 'react'
 import { useForm } from 'react-hook-form';
 import { FiCornerUpLeft } from 'react-icons/fi';
-import { activeProjectsAtom, savedTimersAtom, tagsAtom } from 'src/atoms';
+import { activeProjectsAtom, savedTimersAtom, tagsAtom } from '../atoms';
 
 interface Props {
   onSuccess: () => void

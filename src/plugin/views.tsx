@@ -2,7 +2,7 @@ import React from 'react'
 import { Root, createRoot } from 'react-dom/client'
 import { ItemView, WorkspaceLeaf } from 'obsidian'
 import {MainView, Provider} from '../components'
-import type TogglPlugin from 'src/main'
+import type TogglPlugin from '../main'
 
 export const VIEW_TYPE_TOGGL = 'toggl'
 

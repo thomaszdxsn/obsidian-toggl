@@ -1,7 +1,7 @@
 import { css } from "@emotion/css"
 import React from "react"
-import { usePlugin } from "src/hooks"
-import { TimerDetailModal } from "src/plugin/modal"
+import { usePlugin } from "../hooks"
+import { TimerDetailModal } from "../plugin/modal"
 import { CurrentTimer } from "./CurrentTimer"
 import { TimerList } from "./TimerList"
 import { FiPlus } from 'react-icons/fi'

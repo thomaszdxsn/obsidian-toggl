@@ -2,9 +2,9 @@ import React from 'react'
 import { css } from "@emotion/css"
 import { useAtomValue } from "jotai"
 import { useMemo } from "react"
-import { projectsAtom, savedTimersAtom } from "src/atoms"
-import { Project } from "src/interfaces"
-import TogglPlugin from "src/main"
+import { projectsAtom, savedTimersAtom } from "../atoms"
+import { Project } from "../interfaces"
+import TogglPlugin from "../main"
 import { TimerCard } from './TimerCard'
 
 interface Props {

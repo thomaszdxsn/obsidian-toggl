@@ -2,7 +2,7 @@ import React, { StrictMode } from "react"
 import { store } from "../atoms"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import type TogglPlugin from "../main"
-import { PluginContext } from "src/hooks"
+import { PluginContext } from "../hooks"
 import {Provider as JotaiProvider} from 'jotai'
 
 interface Props {
