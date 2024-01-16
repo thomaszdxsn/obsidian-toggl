@@ -1,4 +1,4 @@
-import { formatSeconds } from "../src/utils";
+import { formatSeconds, nowPercentageInDay } from "../src/utils";
 
 
 it("formatSeconds", () => {
@@ -13,4 +13,9 @@ it("formatSeconds", () => {
   expect(formatSeconds(86399)).toBe("23:59:59")
   expect(formatSeconds(86400)).toBe("24:00:00")
   expect(formatSeconds(86401)).toBe("24:00:01")
+})
+
+it("nowPercentageInDay", () => {
+  expect(nowPercentageInDay()).toBeGreaterThan(0)
+  expect(nowPercentageInDay()).toBeLessThan(1)
 })
