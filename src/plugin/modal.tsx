@@ -1,9 +1,9 @@
 import { App, Modal } from "obsidian";
 import React from 'react'
 import { Root, createRoot } from "react-dom/client";
-import type TogglPlugin from "./main";
-import { TimerList } from "./components/TimerList";
-import { Provider, TimerForm } from "./components";
+import type TogglPlugin from "../main";
+import { TimerList } from "../components/TimerList";
+import { Provider, TimerForm } from "../components";
 
 export class TimerDetailModal extends Modal {
 	private root: Root | null = null

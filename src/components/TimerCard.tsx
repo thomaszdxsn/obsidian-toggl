@@ -51,6 +51,7 @@ export const TimerCard = ({ timer, plugin, project, onSuccess }: Props) => {
       <div className={css`
           display: flex;
           flex-direction: column;
+          flex-grow: 1;
       `}>
         <div style={{ color: project?.color }}>{timer.projectName}</div>
         <div
