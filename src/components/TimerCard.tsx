@@ -8,8 +8,9 @@ import { css } from "@emotion/css"
 import { FiPause, FiPlay } from "react-icons/fi"
 import { Button } from "./Button"
 import { TimeDisplay } from "./TimeDisplay"
-import { formatSeconds, isSameTimer } from "src/utils"
+import { formatSeconds, isActiveEntry, isSameTimer } from "src/utils"
 import { useStopTimerMutation } from "src/hooks"
+import { produce } from "immer"
 
 interface Props {
   timer: Timer
@@ -19,7 +20,7 @@ interface Props {
 }
 
 export const TimerCard = ({ timer, plugin, project, onSuccess }: Props) => {
-  const me = useAtomValue(meAtom)
+  const [me, setMe] = useAtom(meAtom)
   const mutationFn = plugin.togglService.api.createTimeEntry.bind(
     plugin.togglService.api
   ) as typeof plugin.togglService.api.createTimeEntry
@@ -47,6 +48,13 @@ export const TimerCard = ({ timer, plugin, project, onSuccess }: Props) => {
       onSuccess: (entry) => {
         setCurrentEntry(entry.data)
         onSuccess?.()
+        setMe(prev => produce(prev, draft => {
+          if (draft) {
+            const oldEntries = (draft?.time_entries ?? []).filter(entry => !isActiveEntry(entry))
+            draft.time_entries = [...oldEntries, entry.data]
+          }
+          return draft
+        }))
       }
     }
   )

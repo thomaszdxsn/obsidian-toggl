@@ -19,3 +19,7 @@ export const nowPercentageInDay = () => {
 export const isSameTimer = ({ timer, entry }: { timer: Timer, entry: TimeEntry }) => {
 	return timer.projectId === entry.project_id && timer.description === entry.description && timer.tagIds.join(",") === entry.tag_ids.join(",")
 }
+
+export const isActiveEntry = (entry: TimeEntry) => {
+	return entry.duration === -1
+}
