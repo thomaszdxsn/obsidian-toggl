@@ -1,4 +1,5 @@
-import { formatSeconds, nowPercentageInDay } from "../src/utils";
+import { TimeEntry } from "src/interfaces";
+import { formatSeconds, nowPercentageInDay, isSameTimer } from "../src/utils";
 
 
 it("formatSeconds", () => {
@@ -18,4 +19,36 @@ it("formatSeconds", () => {
 it("nowPercentageInDay", () => {
   expect(nowPercentageInDay()).toBeGreaterThan(0)
   expect(nowPercentageInDay()).toBeLessThan(1)
+})
+
+it("isSameTimer", () => {
+  const timer = {
+    projectId: 1,
+    description: "test",
+    tagIds: [1, 2, 3],
+    projectName: "123",
+    tags: ["123", "456", "789"],
+  }
+  const entry: TimeEntry = {
+    project_id: 1,
+    description: "test",
+    tag_ids: [1, 2, 3],
+    tags: [],
+    at: "2021-01-01T00:00:00Z",
+    billable: false,
+    duronly: false,
+    duration: -1,
+    start: "2021-01-01T00:00:00Z",
+    stop: "2021-01-01T00:00:00Z",
+    id: 1,
+    pid: 1,
+    server_deleted_at: null,
+    task_id: null,
+    tid: 1,
+    uid: 1,
+    user_id: 1,
+    workspace_id: 1,
+    wid: 1
+  }
+  expect(isSameTimer({ timer, entry })).toBeTruthy()
 })

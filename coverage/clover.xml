@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1705412311258" clover="3.2.0">
-  <project timestamp="1705412311258" name="All files">
-    <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1" elements="6" coveredelements="6" complexity="0" loc="5" ncloc="5" packages="1" files="1" classes="1"/>
+<coverage generated="1705485147017" clover="3.2.0">
+  <project timestamp="1705485147017" name="All files">
+    <metrics statements="12" coveredstatements="12" conditionals="3" coveredconditionals="3" methods="3" coveredmethods="3" elements="18" coveredelements="18" complexity="0" loc="12" ncloc="12" packages="1" files="1" classes="1"/>
     <file name="utils.ts" path="/Users/zhouyang/Coding/obsidian-toggl/src/utils.ts">
-      <metrics statements="5" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
-      <line num="1" count="1" type="stmt"/>
-      <line num="2" count="11" type="stmt"/>
-      <line num="3" count="11" type="stmt"/>
+      <metrics statements="12" coveredstatements="12" conditionals="3" coveredconditionals="3" methods="3" coveredmethods="3"/>
+      <line num="3" count="1" type="stmt"/>
       <line num="4" count="11" type="stmt"/>
       <line num="5" count="11" type="stmt"/>
+      <line num="6" count="11" type="stmt"/>
+      <line num="7" count="11" type="stmt"/>
+      <line num="11" count="1" type="stmt"/>
+      <line num="12" count="2" type="stmt"/>
+      <line num="13" count="2" type="stmt"/>
+      <line num="14" count="2" type="stmt"/>
+      <line num="15" count="2" type="stmt"/>
+      <line num="19" count="1" type="stmt"/>
+      <line num="20" count="1" type="cond" truecount="3" falsecount="0"/>
     </file>
   </project>
 </coverage>
