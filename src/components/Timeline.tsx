@@ -15,6 +15,7 @@ interface Props {
     label: React.ReactNode
     percentage: number
   }[]
+  itemClassName?: string
 }
 
 const SIZE_MAP = {
@@ -23,7 +24,7 @@ const SIZE_MAP = {
   large: 12,
 } as const
 
-export const Timeline = ({ className, direction, gap = 0, showLabel = true, rounded = true, finished = false, items, size = "small" }: Props) => {
+export const Timeline = ({ className, direction, gap = 0, showLabel = true, rounded = true, finished = false, items, size = "small", itemClassName }: Props) => {
   return (
     <div className={clsx(css`
       display: flex;
@@ -52,13 +53,16 @@ export const Timeline = ({ className, direction, gap = 0, showLabel = true, roun
         }
         return <div key={index}
           style={containerStyle}
-          className={css`
+          className={clsx(
+            css`
           display: flex;
           flex-direction: ${direction === "horizontal" ? "column" : "row"};
-        `}>
+          gap: 8px;
+        `, itemClassName
+          )}>
           <div key={index} style={style} />
           {showLabel && (
-            <div>
+            <div className={css`flex: 1;`}>
               {item.label}
             </div>
           )}

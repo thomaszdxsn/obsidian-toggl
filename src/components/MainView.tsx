@@ -11,6 +11,7 @@ import { projectDictAtom, todayTimeEntriesAtom } from "src/atoms"
 import dayjs from "dayjs"
 import { Timeline } from "./Timeline"
 import { RefreshButton } from "./RefreshButton"
+import { EntryList } from "./EntryList"
 
 export const MainView = () => {
   const plugin = usePlugin()
@@ -45,6 +46,8 @@ export const MainView = () => {
           </Button>
         </div>
         <TimerList plugin={plugin} />
+
+        <EntryList />
       </section>
     </div>
   )

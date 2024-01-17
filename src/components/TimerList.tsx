@@ -31,8 +31,14 @@ export const TimerList = ({ onSave, plugin }: Props) => {
       display: grid;
       gap: var(--size-4-1);
 
-      @container timer-list (min-width: 250px) {
+      @container timer-list (min-width: 240px) {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      @container timer-list (min-width: 360px) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      @container timer-list (min-width: 480px) {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
       }
     `)}>
       {timers.map((timer, index) => {

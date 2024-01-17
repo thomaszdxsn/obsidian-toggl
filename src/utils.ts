@@ -21,5 +21,9 @@ export const isSameTimer = ({ timer, entry }: { timer: Timer, entry: TimeEntry }
 }
 
 export const isActiveEntry = (entry: TimeEntry) => {
-	return entry.duration === -1
+	return entry.stop === null
+}
+
+export const calcPercentage = (value: number, total: number, fixed=2) => {
+	return Number((value / total).toFixed(fixed))
 }
