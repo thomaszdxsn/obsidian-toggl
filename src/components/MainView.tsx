@@ -10,6 +10,7 @@ import { useAtomValue } from "jotai"
 import { projectDictAtom, todayTimeEntriesAtom } from "src/atoms"
 import dayjs from "dayjs"
 import { Timeline } from "./Timeline"
+import { RefreshButton } from "./RefreshButton"
 
 export const MainView = () => {
   const plugin = usePlugin()
@@ -33,15 +34,16 @@ export const MainView = () => {
 				flex-direction: column;
 				gap: var(--size-4-2);
 			`}>
-        <Button onClick={onClick}
-          className={css`
-						display: block;
-						margin-left: auto;
-						cursor: pointer;
-					`}
-        >
-          <FiPlus />
-        </Button>
+        <div className={css`
+          display: flex;
+          gap: var(--size-4-2);
+          justify-content: flex-end;
+        `}>
+          <RefreshButton />
+          <Button onClick={onClick}>
+            <FiPlus />
+          </Button>
+        </div>
         <TimerList plugin={plugin} />
       </section>
     </div>

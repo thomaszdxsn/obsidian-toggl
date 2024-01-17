@@ -1,3 +1,5 @@
+import { css } from '@emotion/css'
+import clsx from 'clsx'
 import React from 'react'
 import { ClipLoader } from 'react-spinners'
 
@@ -8,10 +10,15 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 
-export const Button = ({ children, isLoading, loadingIconSize=13, ...props }: Props) => {
+export const Button = ({ children, isLoading, loadingIconSize = 13, className, ...props }: Props) => {
   return <button
     {...props}
     disabled={isLoading || props.disabled}
+    className={
+      clsx(css`
+        cursor: ${isLoading ? "wait" : "pointer"};
+      `, className)
+    }
   >{isLoading ?
     <ClipLoader size={loadingIconSize}
       cssOverride={{

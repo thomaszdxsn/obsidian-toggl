@@ -120,7 +120,7 @@ export default class TogglPlugin extends Plugin {
 				return
 			}
 			const projectName = store.get(currentEntryProjectAtom)?.name ?? ""
-			const text = [projectName, passedTime].filter(Boolean).join("-")
+			const text = [projectName, passedTime].filter(Boolean).join(" ")
 			statusBarItem.setText(text)
 		})
 	}
