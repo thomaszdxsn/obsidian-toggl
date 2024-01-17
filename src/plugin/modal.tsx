@@ -4,6 +4,7 @@ import { Root, createRoot } from "react-dom/client";
 import type TogglPlugin from "../main";
 import { TimerList } from "../components/TimerList";
 import { Provider, TimerForm } from "../components";
+import { css } from "@emotion/css";
 
 export class TimerDetailModal extends Modal {
 	private root: Root | null = null
@@ -50,7 +51,11 @@ export class TimerListModal extends Modal {
 		const onSave = this.close.bind(this)
 		this.root.render(
 			<Provider plugin={this.plugin}>
+				<div className={css`
+					margin-top: var(--size-4-4);
+				`}>
 				<TimerList plugin={this.plugin} onSave={onSave} />
+				</div>
 			</Provider>
 		)
 	}

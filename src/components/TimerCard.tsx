@@ -77,6 +77,7 @@ export const TimerCard = ({ timer, plugin, project, onSuccess }: Props) => {
           flex-direction: column;
           gap: var(--size-4-2);
           border-radius: var(--radius-m);
+          border: 1px solid var(--background-modifier-border);
         `}>
       <div className={css`
           display: flex;
