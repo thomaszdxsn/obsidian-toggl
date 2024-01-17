@@ -90,5 +90,6 @@ export const EntriesTimeline = ({ className, entries, projectDict, entryMinHeigh
     items={items}
     size="medium"
     gap={1}
+    finished
   />
 }
