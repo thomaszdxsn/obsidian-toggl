@@ -1,5 +1,5 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
-import type TogglPlugin from "./main";
+import type TogglPlugin from "../main";
 
 
 export class SettingTab extends PluginSettingTab {

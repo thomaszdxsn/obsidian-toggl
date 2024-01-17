@@ -3,6 +3,9 @@ import type { Me, TimeEntry, Timer } from "./interfaces";
 import dayjs from "dayjs";
 import { formatSeconds } from "./utils";
 
+/*
+	# Basic Atoms
+*/
 
 export const store = createStore();
 
@@ -12,6 +15,12 @@ export const currentEntryAtom = atom<TimeEntry | null>(null)
 
 export const passedSecondsAtom = atom<number | null>(null)
 
+export const meAtom = atom<Me | null>(null)
+
+/*
+	Derived Atoms
+*/
+
 export const passedTimeAtom = atom<string | null>(get => {
 	const passedSeconds = get(passedSecondsAtom)
 	if (!passedSeconds) {
@@ -19,8 +28,6 @@ export const passedTimeAtom = atom<string | null>(get => {
 	}
 	return formatSeconds(passedSeconds)
 })
-
-export const meAtom = atom<Me | null>(null)
 
 export const tagsAtom = atom<Me["tags"]>(get => {
 	const me = get(meAtom)
@@ -37,6 +44,21 @@ export const activeProjectsAtom = atom(get => {
 	return projects.filter(project => project.active)
 })
 
+export const projectDictAtom = atom(get => {
+	const projects = get(projectsAtom)
+	return Object.fromEntries(projects.map(project => [project.id, project]))
+})
+
+const myTimeEntriesAtom = atom(get => {
+	const me = get(meAtom)
+	return me?.time_entries ?? []
+})
+
+export const todayTimeEntriesAtom = atom(get => {
+	const entries = get(myTimeEntriesAtom)
+	return entries.filter(entry => dayjs().isSame(entry.start, 'day'))
+})
+
 export const currentEntryProjectAtom = atom(get => {
 	const currentEntry = get(currentEntryAtom)
 	const projects = get(projectsAtom)
@@ -45,6 +67,10 @@ export const currentEntryProjectAtom = atom(get => {
 	}
 	return projects.find(project => project.id === currentEntry.project_id)
 })
+
+/*
+	Utilities
+*/
 
 export const tick = () => {
 	const interval = setInterval(() => {
