@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-toggl",
 	"name": "obsidian-toggl",
-	"version": "1.0.0-beta",
+	"version": "1.0.0-rc.1",
 	"minAppVersion": "0.15.0",
 	"description": "Toggl integration for Obsidian",
 	"author": "Obsidian",
