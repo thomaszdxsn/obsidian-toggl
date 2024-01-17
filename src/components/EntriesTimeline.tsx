@@ -47,16 +47,22 @@ export const EntriesTimeline = ({ className, entries, projectDict, entryMinHeigh
               overflow: hidden;
               text-overflow: ellipsis;
             `}>{entry.description}</div>
-            <div>🏷️ {entry.tags.join(",")}</div>
+            <div className={css`
+              color: var(--text-accent);
+            `}>🏷️ {entry.tags.join(",")}</div>
           </div>
           <div className={css`
           height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: end;
             gap: 8px;
           `}>
-            <TimeDisplay className={css`text-align: center; font-size: 1.25rem;`}>{formatSeconds(entry.duration)}</TimeDisplay>
+            <TimeDisplay className={css`
+              font-size: 1.00rem; 
+              font-weight: var(--font-semibold);
+            `}>{formatSeconds(entry.duration)}</TimeDisplay>
             <TimeDisplay className={css`font-size: 0.75rem;`}>
               {formatTime(entry.start)} - {formatTime(entry.stop)}
             </TimeDisplay>

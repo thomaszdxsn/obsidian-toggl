@@ -21,6 +21,8 @@ export const CurrentTimer = ({ placeholder = "No time entry running" }: { placeh
       onSuccess: () => {
         setCurrentEntry(null)
         setPassedNumbers(null)
+
+        // TODO: update me.time_entries
       }
     })
   }
