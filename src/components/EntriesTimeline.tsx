@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { Project, TimeEntry } from "../interfaces"
 import { Timeline } from "./Timeline"
-import { calcPercentage, formatSeconds } from '../utils'
+import { calcPercentage, formatSeconds, formatTime } from '../utils'
 import { css } from '@emotion/css'
 import clsx from 'clsx'
 import { TimeDisplay } from './TimeDisplay'
@@ -23,7 +23,6 @@ export const EntriesTimeline = ({ className, entries, projectDict, entryMinHeigh
     return entries.slice().sort((a, b) => a.start < b.start ? 1 : -1).map(entry => {
       const project = entry.project_id ? projectDict[entry.project_id] : undefined
       const percentage = equalEntryHeight ? calcPercentage(1, entries.length) : calcPercentage(entry.duration, totalDuration)
-      const formatTime = (datetime: string) => dayjs(datetime).format("HH:MM")
       const label = (
         <div className={css`
           display: flex;

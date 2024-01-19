@@ -1,4 +1,5 @@
 import { TimeEntry, Timer } from "./interfaces"
+import dayjs from 'dayjs'
 
 export const formatSeconds = (seconds: number) => {
 	const hours = Math.floor(seconds / 3600)
@@ -26,4 +27,12 @@ export const isActiveEntry = (entry: TimeEntry) => {
 
 export const calcPercentage = (value: number, total: number, fixed=2) => {
 	return Number((value / total).toFixed(fixed))
+}
+
+export const formatTime = (datetimeStr: string, format = "HH:mm", invalidText = "--") => {
+	const d = dayjs(datetimeStr)
+	if (d.isValid()) {
+		return d.format(format)
+	}
+	return invalidText
 }

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import { EntriesTimeline } from '../components/EntriesTimeline';
 import { faker } from '@faker-js/faker'
-import { createRandomProject, createRandomTimeEntry } from '../../__tests__/mock';
+import { createRandomProject, createRandomTimeEntry } from '../../mock';
 import { css } from '@emotion/css';
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export

@@ -1,5 +1,5 @@
 import { TimeEntry } from "src/interfaces";
-import { formatSeconds, nowPercentageInDay, isSameTimer } from "../src/utils";
+import { formatSeconds, nowPercentageInDay, isSameTimer, formatTime } from "../src/utils";
 
 
 it("formatSeconds", () => {
@@ -51,4 +51,19 @@ it("isSameTimer", () => {
     wid: 1
   }
   expect(isSameTimer({ timer, entry })).toBeTruthy()
+})
+
+
+describe("formatTime", () => {
+  it("default format is HH:mm", () => {
+    expect(formatTime("2021-11-24 01:02:03")).toBe("01:02")
+  })
+
+  it("invalid datetime format is --", () => {
+    expect(formatTime("invalid")).toBe("--")
+  })
+
+  it("custom format", () => {
+    expect(formatTime("2021-11-24 01:02:03", "HH:mm:ss")).toBe("01:02:03")
+  })
 })
