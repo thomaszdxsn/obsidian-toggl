@@ -23,29 +23,15 @@ export const TimerList = ({ onSave, plugin }: Props) => {
   const findProject = (projectId: number): Project | undefined => projectDict[projectId]
 
   return (
-    <div className={css`
-      container-type: inline-size;
-      container-name: timer-list;
-    `}>
-    <div className={clsx("timer-list", css`
+    <div className={clsx( css`
       display: grid;
       gap: var(--size-4-1);
-
-      @container timer-list (min-width: 240px) {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-      @container timer-list (min-width: 360px) {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-      @container timer-list (min-width: 480px) {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-      }
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     `)}>
       {timers.map((timer, index) => {
         const project = findProject(timer.projectId)
         return <TimerCard onSuccess={onSave} key={index} timer={timer} project={project} plugin={plugin} />
       })}
-    </div>
     </div>
   )
 }

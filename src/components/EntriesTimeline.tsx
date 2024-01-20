@@ -5,7 +5,6 @@ import { calcPercentage, formatSeconds, formatTime } from '../utils'
 import { css } from '@emotion/css'
 import clsx from 'clsx'
 import { TimeDisplay } from './TimeDisplay'
-import dayjs from 'dayjs'
 
 interface Props {
   className?: string
