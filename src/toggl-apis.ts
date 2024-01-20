@@ -110,30 +110,24 @@ export class TogglService {
 		this.api = new TogglAPI(apiToken)
 	}
 
-	private async fetchMe() {
-		return this.api.getMe().then(response => {
-			store.set(meAtom, response.data)
-		})
-	}
-
-
-	tick(errorHandler?: (error: AxiosError<string>) => void, intervalTime = 10000,) {
+	tick(errorHandler?: (error: AxiosError<string>) => void, intervalTime = 1000 * 30,) {
 		const intervalHandler = async (onError?: () => void) => {
 			try {
-				const response = await this.api.getCurrentTimeEntry()
-				store.set(currentEntryAtom, response.data)
+				const [currentEntry, me] = await Promise.all([
+					this.api.getCurrentTimeEntry(),
+					this.api.getMe()
+				] as const)
+				store.set(currentEntryAtom, currentEntry.data)
+				store.set(meAtom, me.data)
 			} catch (error) {
 				store.set(currentEntryAtom, null)
-				if (errorHandler) {
-					errorHandler(error)
-				}
+				errorHandler?.(error)
 				onError?.()
 			}
 		}
 
 		// run immediately on first call
 		intervalHandler()
-		this.fetchMe()
 
 		const interval = setInterval(async () => {
 			intervalHandler(() => clearInterval(interval))
