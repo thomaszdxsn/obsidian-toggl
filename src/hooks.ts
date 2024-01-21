@@ -1,7 +1,12 @@
 import { createContext, useContext } from "react"
 import type TogglPlugin from "./main"
-import { TimeEntry } from "./interfaces"
 import { useMutation } from "@tanstack/react-query"
+import { useAtom, useSetAtom } from "jotai"
+import { currentEntryAtom, meAtom, passedSecondsAtom } from "./atoms"
+import { produce } from "immer"
+import { isActiveEntry } from "./utils"
+import { Timer } from "./interfaces"
+import dayjs from "dayjs"
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 export const PluginContext = createContext<TogglPlugin>(null!)
@@ -10,10 +15,68 @@ export const usePlugin = () => {
 	return useContext(PluginContext)
 }
 
-export const useStopTimerMutation = () => {
+export const useStopTimerMutation = (timerId?: string) => {
 	const plugin = usePlugin()
-	const mutationFn: (timer: TimeEntry) => Promise<void> = plugin.togglService.api.stopTimeEntry.bind(plugin.togglService.api)
+	const setMe = useSetAtom(meAtom)
 	return useMutation({
-		mutationFn: mutationFn
+		mutationFn: (params: { timeEntryId: number, workspaceId: number }) => plugin.togglService.api.stopTimeEntry(params),
+		mutationKey: ["stopTimeTimer", timerId],
+		onSuccess: ({ data }) => {
+			setMe((me) => produce(me, (draft) => {
+				if (!draft) {
+					return
+				}
+				const ongoingTimerIndex = draft.time_entries.findIndex((entry) => isActiveEntry(entry))
+				if (ongoingTimerIndex) {
+					draft.time_entries[ongoingTimerIndex] = data
+				} else {
+					draft.time_entries.unshift(data)
+				}
+			}))
+		}
+	})
+}
+
+export const useRefreshMutation = () => {
+	const plugin = usePlugin()
+	const setMe = useSetAtom(meAtom)
+	const setCurrentEntry = useSetAtom(currentEntryAtom)
+	return useMutation({
+		mutationFn: () => plugin.togglService.api.getMe(),
+		mutationKey: ["refresh"],
+		onSuccess: ({ data }) => {
+			setMe(data)
+			const currentEntry = data.time_entries.find(e => e.duration === -1) ?? null
+			setCurrentEntry(currentEntry)
+		}
+	})
+}
+
+
+export const useStartTimerMutation = (onSuccess?: () => void) => {
+	const plugin = usePlugin()
+	const [me, setMe] = useAtom(meAtom)
+	const setCurrentEntry = useSetAtom(currentEntryAtom)
+	const setPassedSeconds = useSetAtom(passedSecondsAtom)
+	return useMutation({
+		mutationFn: (timer: Timer) => plugin.togglService.api.createTimeEntry({
+			...timer,
+			workspaceId: me!.default_workspace_id,
+			billable: false,
+			start: new Date().toISOString(),
+			createdWith: "obsidian-toggl-plugin"
+		}),
+		onSuccess: (entry) => {
+			setPassedSeconds(dayjs().diff(dayjs(entry.data.start), 'seconds'))
+			setCurrentEntry(entry.data)
+			onSuccess?.()
+			setMe(prev => produce(prev, draft => {
+				if (draft) {
+					const oldEntries = (draft?.time_entries ?? []).filter(entry => !isActiveEntry(entry))
+					draft.time_entries = [...oldEntries, entry.data]
+				}
+				return draft
+			}))
+		}
 	})
 }

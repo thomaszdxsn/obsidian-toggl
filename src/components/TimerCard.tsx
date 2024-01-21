@@ -1,16 +1,14 @@
 import React, { useMemo } from "react"
-import { useMutation } from "@tanstack/react-query"
 import { useAtom, useAtomValue } from "jotai"
-import { currentEntryAtom, meAtom, passedSecondsAtom, todayTimeEntriesAtom } from "../atoms"
+import { currentEntryAtom, passedSecondsAtom, todayTimeEntriesAtom } from "../atoms"
 import { Project, Timer } from "../interfaces"
 import TogglPlugin from "../main"
 import { css } from "@emotion/css"
 import { FiPause, FiPlay } from "react-icons/fi"
 import { Button } from "./Button"
 import { TimeDisplay } from "./TimeDisplay"
-import { formatSeconds, isActiveEntry, isSameTimer } from "src/utils"
-import { useStopTimerMutation } from "src/hooks"
-import { produce } from "immer"
+import { formatSeconds, generateTimerId, isSameTimer } from "src/utils"
+import { useStartTimerMutation, useStopTimerMutation } from "src/hooks"
 
 interface Props {
   timer: Timer
@@ -20,14 +18,13 @@ interface Props {
 }
 
 export const TimerCard = ({ timer, plugin, project, onSuccess }: Props) => {
-  const [me, setMe] = useAtom(meAtom)
   const mutationFn = plugin.togglService.api.createTimeEntry.bind(
     plugin.togglService.api
   ) as typeof plugin.togglService.api.createTimeEntry
   const [currentEntry, setCurrentEntry] = useAtom(currentEntryAtom)
   const [passedSeconds, setPassedSeconds] = useAtom(passedSecondsAtom)
   const todayTimeEntries = useAtomValue(todayTimeEntriesAtom)
-  const stopTimerMutation = useStopTimerMutation()
+  const stopTimerMutation = useStopTimerMutation(generateTimerId(timer))
 
   const sameTimerEntries = useMemo(() => {
     return todayTimeEntries.filter(entry => isSameTimer({ timer, entry }))
@@ -42,39 +39,18 @@ export const TimerCard = ({ timer, plugin, project, onSuccess }: Props) => {
     }, 0)
   }, [sameTimerEntries, passedSeconds])
 
-  const mutation = useMutation(
-    {
-      mutationFn,
-      onSuccess: (entry) => {
-        setCurrentEntry(entry.data)
-        onSuccess?.()
-        setMe(prev => produce(prev, draft => {
-          if (draft) {
-            const oldEntries = (draft?.time_entries ?? []).filter(entry => !isActiveEntry(entry))
-            draft.time_entries = [...oldEntries, entry.data]
-          }
-          return draft
-        }))
-      }
-    }
-  )
+  const startTimerMutation = useStartTimerMutation(onSuccess)
 
   const onClick = (timer: Timer) => {
     if (isCurrentEntry) {
-      stopTimerMutation.mutate(currentEntry!, {
+      stopTimerMutation.mutate({ workspaceId: currentEntry!.workspace_id, timeEntryId: currentEntry!.id }, {
         onSuccess: () => {
           setCurrentEntry(null)
           setPassedSeconds(null)
         }
       })
     } else {
-      mutation.mutate({
-        ...timer,
-        workspaceId: me!.default_workspace_id,
-        billable: false,
-        start: new Date().toISOString(),
-        createdWith: "obsidian-toggl-plugin"
-      })
+      startTimerMutation.mutate(timer)
     }
   }
   return (
@@ -113,7 +89,7 @@ export const TimerCard = ({ timer, plugin, project, onSuccess }: Props) => {
           font-size: var(--font-smaller);
         `}>{duration === 0 ? null : formatSeconds(duration)}</TimeDisplay>
         <Button onClick={() => onClick(timer)}
-          isLoading={mutation.isPending || stopTimerMutation.isPending}
+          isLoading={startTimerMutation.isPending || stopTimerMutation.isPending}
         >
           {isCurrentEntry ? <FiPause /> : <FiPlay />}
         </Button>

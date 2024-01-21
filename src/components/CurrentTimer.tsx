@@ -1,28 +1,28 @@
 import React from 'react'
 import { useAtom, useAtomValue, useSetAtom } from "jotai"
 import { useStopTimerMutation } from "../hooks"
-import { currentEntryAtom, currentEntryProjectAtom, passedSecondsAtom, passedTimeAtom } from "../atoms"
+import { currentEntryAtom, currentEntryProjectAtom, currentTimerAtom, passedSecondsAtom, passedTimeAtom } from "../atoms"
 import { css } from '@emotion/css'
 import { FiPause } from 'react-icons/fi'
 import { TimeDisplay } from './TimeDisplay'
 import { Button } from './Button'
+import { generateTimerId } from 'src/utils'
 
 export const CurrentTimer = ({ placeholder = "No time entry running" }: { placeholder?: string }) => {
-  const stopTimerMutation = useStopTimerMutation()
   const passed = useAtomValue(passedTimeAtom)
   const setPassedNumbers = useSetAtom(passedSecondsAtom)
   const [currentEntry, setCurrentEntry] = useAtom(currentEntryAtom)
+  const currentTimer = useAtomValue(currentTimerAtom)
+  const stopTimerMutation = useStopTimerMutation(currentTimer ? generateTimerId(currentTimer) : undefined)
   const currentProject = useAtomValue(currentEntryProjectAtom)
   const onStop = () => {
     if (!currentEntry) {
       return
     }
-    stopTimerMutation.mutate(currentEntry, {
+    stopTimerMutation.mutate({ timeEntryId: currentEntry.id, workspaceId: currentEntry.workspace_id }, {
       onSuccess: () => {
         setCurrentEntry(null)
         setPassedNumbers(null)
-
-        // TODO: update me.time_entries
       }
     })
   }

@@ -1,7 +1,7 @@
 import { atom, createStore } from "jotai";
 import type { Me, TimeEntry, Timer } from "./interfaces";
 import dayjs from "dayjs";
-import { formatSeconds } from "./utils";
+import { formatSeconds, isSameTimer } from "./utils";
 
 /*
 	# Basic Atoms
@@ -20,6 +20,15 @@ export const meAtom = atom<Me | null>(null)
 /*
 	Derived Atoms
 */
+
+export const currentTimerAtom = atom(get => {
+	const currentEntry = get(currentEntryAtom)
+	const savedTimers = get(savedTimersAtom)
+	if (!currentEntry) {
+		return null
+	}
+	return savedTimers.find(timer => isSameTimer({ timer, entry: currentEntry })) ?? null
+})
 
 export const passedTimeAtom = atom<string | null>(get => {
 	const passedSeconds = get(passedSecondsAtom)

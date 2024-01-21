@@ -30,9 +30,9 @@ export class TogglAPI {
 		return response
 	}
 
-	async stopTimeEntry(timeEntry: TimeEntry) {
-		const response = await this.client.patch(
-			`v9/workspaces/${timeEntry.workspace_id}/time_entries/${timeEntry.id}/stop`,
+	async stopTimeEntry({timeEntryId, workspaceId}: {timeEntryId: number, workspaceId: number}) {
+		const response = await this.client.patch<TimeEntry>(
+			`v9/workspaces/${workspaceId}/time_entries/${timeEntryId}/stop`,
 		)
 		return response
 	}

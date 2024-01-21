@@ -36,3 +36,7 @@ export const formatTime = (datetimeStr: string, format = "HH:mm", invalidText = 
 	}
 	return invalidText
 }
+
+export const generateTimerId = (timer: Timer) => {
+	return [timer.projectId, timer.description, timer.tagIds.join(",")].join("-")
+}
