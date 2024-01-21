@@ -18,8 +18,7 @@ For example, creating Toggl tasks based on Obsidian notes, generate Toggl time e
 
 - Edit/Delete timer
 - Edit current tiem entry detail data
-- View recent time entries
-  - generate report from time entries
+- generate report from time entries
 - Generate Toggl task from Obsidian note
 
 # Visuals
