@@ -112,3 +112,22 @@ export const useCreateProjectMutation = () => {
 		}
 	})
 }
+
+export const useCreateTagMutation = () => {
+	const plugin = usePlugin()
+	const [me, setMe] = useAtom(meAtom)
+	return useMutation({
+		mutationFn: (name: string) => plugin.togglService.api.createTag({
+			workspaceId: me!.default_workspace_id,
+			name
+		}),
+		onSuccess: (tag) => {
+			setMe(prev => produce(prev, draft => {
+				if (draft) {
+					draft.tags.push(tag.data)
+				}
+				return draft
+			}))
+		}
+	})
+}

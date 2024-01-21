@@ -1,7 +1,7 @@
 import { css } from "@emotion/css"
 import React, { useMemo } from "react"
 import { usePlugin } from "../hooks"
-import { ProjectModal, TimerDetailModal } from "../plugin/modal"
+import { ProjectModal, TagModal, TimerDetailModal } from "../plugin/modal"
 import { CurrentTimer } from "./CurrentTimer"
 import { TimerList } from "./TimerList"
 import { FiCornerUpLeft, FiFolder, FiPlus, FiTag } from 'react-icons/fi'
@@ -153,7 +153,7 @@ export const TagsView = () => {
   const switchView = useSetAtom(viewAtom)
   const backToHomePage = () => switchView("homepage")
   const onAddTag = () => {
-    const modal = new ProjectModal(plugin)
+    const modal = new TagModal(plugin)
     modal.open()
   }
   const tags = useAtomValue(tagsAtom)
