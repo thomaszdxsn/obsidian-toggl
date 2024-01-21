@@ -60,7 +60,7 @@ export const Timeline = ({ className, direction, gap = 0, showLabel = true, roun
           gap: 8px;
         `, itemClassName
           )}>
-          <div key={index} style={style} />
+          <div key={index} style={style} className={css`flex-shrink: 0`} />
           {showLabel && (
             <div className={css`flex: 1;`}>
               {item.label}

@@ -31,13 +31,16 @@ export const EntriesTimeline = ({ className, entries, projectDict, entryMinHeigh
           padding-right: 16px;
         `}>
           <div className={css`
+            flex-shrink: 0;
             display: flex;
             height: 100%;
             flex-direction: column;
             justify-content: space-between;
             min-width: 0;
-            flex: 1;
             padding: 16px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
           `}>
             <div style={{ color: project?.color }}>{project?.name}</div>
             <div className={css`
@@ -47,6 +50,9 @@ export const EntriesTimeline = ({ className, entries, projectDict, entryMinHeigh
             `}>{entry.description}</div>
             <div className={css`
               color: var(--text-accent);
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
             `}>🏷️ {entry.tags.join(",")}</div>
           </div>
           <div className={css`
@@ -56,6 +62,7 @@ export const EntriesTimeline = ({ className, entries, projectDict, entryMinHeigh
             justify-content: center;
             align-items: end;
             gap: 8px;
+            flex-shrink: 0;
           `}>
             <TimeDisplay className={css`
               font-size: 1.00rem; 
