@@ -56,7 +56,6 @@ export function createRandomProject(): Project {
     rate_last_updated: faker.date.recent().toISOString(),
     recurring: faker.datatype.boolean(),
     start_date: faker.date.recent().toISOString(),
-    recurring_parameters: [],
     server_deleted_at: faker.date.recent().toISOString(),
     status: faker.lorem.word(),
     workspace_id: faker.number.int(),
