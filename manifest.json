@@ -4,7 +4,7 @@
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
 	"description": "Toggl integration for Obsidian",
-	"author": "Obsidian",
+	"author": "thomaszdxsn",
 	"authorUrl": "https://github.com/thomaszdxsn/obsidian-toggl",
 	"isDesktopOnly": false
 }
