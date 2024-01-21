@@ -4,15 +4,16 @@ import { usePlugin } from "../hooks"
 import { ProjectModal, TimerDetailModal } from "../plugin/modal"
 import { CurrentTimer } from "./CurrentTimer"
 import { TimerList } from "./TimerList"
-import { FiCornerUpLeft, FiFolder, FiPlus } from 'react-icons/fi'
+import { FiCornerUpLeft, FiFolder, FiPlus, FiTag } from 'react-icons/fi'
 import { Button } from "./Button"
 import { useAtomValue, useSetAtom } from "jotai"
-import { activeProjectsAtom, projectDictAtom, todayTimeEntriesAtom, viewAtom } from "src/atoms"
+import { activeProjectsAtom, projectDictAtom, tagsAtom, todayTimeEntriesAtom, viewAtom } from "src/atoms"
 import dayjs from "dayjs"
 import { Timeline } from "./Timeline"
 import { RefreshButton } from "./RefreshButton"
 import { EntryList } from "./EntryList"
 import { ProjectList } from "./ProjectList"
+import { TagList } from "./TagList"
 
 export const MainView = () => {
   const currentView = useAtomValue(viewAtom)
@@ -91,9 +92,9 @@ export const HomePageView = () => {
     const modal = new TimerDetailModal(app, plugin)
     modal.open()
   }
-  const onSwitchToProjectsView = () => {
-    switchView("projects")
-  }
+  const onSwitchToProjectsView = () => switchView("projects")
+  const onSwitchToTagsView = () => switchView("tags")
+
   return (
     <>
       <div className={css`
@@ -101,6 +102,9 @@ export const HomePageView = () => {
           gap: var(--size-4-2);
           justify-content: flex-end;
         `}>
+        <Button onClick={onSwitchToTagsView} title="tags">
+          <FiTag />
+        </Button>
         <Button onClick={onSwitchToProjectsView} title="projects">
           <FiFolder />
         </Button>
@@ -134,14 +138,9 @@ export const ProjectsView = () => {
         <Button onClick={backToHomePage} title="projects">
           <FiCornerUpLeft />
         </Button>
-        <div className={css`
-          display: flex;
-          gap: var(--size-4-2);
-        `}>
-          <Button onClick={onAddProject} title="add new projeect">
-            <FiPlus />
-          </Button>
-        </div>
+        <Button onClick={onAddProject} title="add new projeect">
+          <FiPlus />
+        </Button>
       </div>
       <ProjectList data={projects} />
     </>
@@ -150,5 +149,28 @@ export const ProjectsView = () => {
 
 
 export const TagsView = () => {
-  return null
+  const plugin = usePlugin()
+  const switchView = useSetAtom(viewAtom)
+  const backToHomePage = () => switchView("homepage")
+  const onAddTag = () => {
+    const modal = new ProjectModal(plugin)
+    modal.open()
+  }
+  const tags = useAtomValue(tagsAtom)
+  return (
+    <>
+      <div className={css`
+      display: flex;
+      justify-content: space-between;
+    `}>
+        <Button onClick={backToHomePage} title="projects">
+          <FiCornerUpLeft />
+        </Button>
+        <Button onClick={onAddTag} title="add new tag">
+          <FiPlus />
+        </Button>
+      </div>
+      <TagList data={tags} />
+    </>
+  )
 }
