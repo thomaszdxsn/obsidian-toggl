@@ -102,11 +102,7 @@ export default class TogglPlugin extends Plugin {
 
 	startTick() {
 		this.togglService = new TogglService(this.settings.apiToken);
-		this.togglService.tick(error => {
-			if (error.response?.data) {
-				new Notice(`Toggl API Error: ${error.response.data}`, 3000)
-			}
-		});
+		this.togglService.tick();
 		this.tickInterval = tick()
 	}
 

@@ -80,3 +80,35 @@ export const useStartTimerMutation = (onSuccess?: () => void) => {
 		}
 	})
 }
+
+
+export const useCreateProjectMutation = () => {
+	const plugin = usePlugin()
+	const [me, setMe] = useAtom(meAtom)
+	return useMutation({
+		mutationFn: ({name, color}: { name: string, color: string }) => plugin.togglService.api.createProject({
+			workspace_id: me!.default_workspace_id,
+			billable: null,
+			active: true,
+			name,
+			color,
+			auto_estimates: false,
+			cid: me!.clients?.[0].id,
+			client_id: null,
+			currency: null,
+			estimated_hours: null,
+			is_private: true,
+			recurring: false,
+			template: null,
+			template_id: null,
+		}),
+		onSuccess: (project) => {
+			setMe(prev => produce(prev, draft => {
+				if (draft) {
+					draft.projects.push(project.data)
+				}
+				return draft
+			}))
+		}
+	})
+}

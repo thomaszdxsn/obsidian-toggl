@@ -27,11 +27,12 @@ export const TimerForm = ({ onSuccess }: Props) => {
   })
   const setSavedTimers = useSetAtom(savedTimersAtom)
   return (
-    <form style={{
-      display: "flex",
-      flexDirection: "column",
-      gap: "1rem"
-    }}
+    <form
+      className={css`
+        display: flex;
+        flex-direction: column;
+        gap: var(--size-4-2);
+      `}
       onSubmit={form.handleSubmit((data) => {
         setSavedTimers(prev => {
           return [...prev, {

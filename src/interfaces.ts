@@ -67,7 +67,7 @@ export interface Project {
 	at: string
 	auto_estimates: boolean | null
 	billable: boolean | null
-	cid: number
+	cid: number | null
 	client_id: number | null
 	color: string
 	created_at: string
@@ -76,14 +76,14 @@ export interface Project {
 	end_date: string
 	estimated_hours: number | null
 	estimated_seconds: number | null
-	fixed_fee: number
+	fixed_fee?: number
 	id: number
 	is_private: boolean
 	name: string
-	rate: number
+	rate?: number
 	rate_last_updated: string | null
 	recurring: boolean
-	recurring_parameters: RecurringProjectParameters[]
+	recurring_parameters?: RecurringProjectParameters
 	server_deleted_at: string | null
 	start_date: string
 	status: string

@@ -1,7 +1,7 @@
 import { css } from "@emotion/css"
 import React, { useMemo } from "react"
 import { usePlugin } from "../hooks"
-import { TimerDetailModal } from "../plugin/modal"
+import { ProjectModal, TimerDetailModal } from "../plugin/modal"
 import { CurrentTimer } from "./CurrentTimer"
 import { TimerList } from "./TimerList"
 import { FiCornerUpLeft, FiFolder, FiPlus } from 'react-icons/fi'
@@ -117,10 +117,12 @@ export const HomePageView = () => {
 
 
 export const ProjectsView = () => {
+  const plugin = usePlugin()
   const switchView = useSetAtom(viewAtom)
   const backToHomePage = () => switchView("homepage")
   const onAddProject = () => {
-
+    const modal = new ProjectModal(plugin)
+    modal.open()
   }
   const projects = useAtomValue(activeProjectsAtom)
   return (
