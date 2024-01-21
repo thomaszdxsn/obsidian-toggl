@@ -9,6 +9,7 @@ export const RefreshButton = () => {
   return (
     <Button onClick={() => refreshMutation.mutate()}
       disabled={refreshMutation.isPending}
+      title="refresh"
     >
       <FiRefreshCw className={
         css`

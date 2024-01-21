@@ -4,22 +4,30 @@ import { usePlugin } from "../hooks"
 import { TimerDetailModal } from "../plugin/modal"
 import { CurrentTimer } from "./CurrentTimer"
 import { TimerList } from "./TimerList"
-import { FiPlus } from 'react-icons/fi'
+import { FiCornerUpLeft, FiFolder, FiPlus } from 'react-icons/fi'
 import { Button } from "./Button"
-import { useAtomValue } from "jotai"
-import { projectDictAtom, todayTimeEntriesAtom } from "src/atoms"
+import { useAtomValue, useSetAtom } from "jotai"
+import { activeProjectsAtom, projectDictAtom, todayTimeEntriesAtom, viewAtom } from "src/atoms"
 import dayjs from "dayjs"
 import { Timeline } from "./Timeline"
 import { RefreshButton } from "./RefreshButton"
 import { EntryList } from "./EntryList"
+import { ProjectList } from "./ProjectList"
 
 export const MainView = () => {
-  const plugin = usePlugin()
-  const app = plugin.app
-  const onClick = () => {
-    const modal = new TimerDetailModal(app, plugin)
-    modal.open()
-  }
+  const currentView = useAtomValue(viewAtom)
+  const viewContent = useMemo(() => {
+    switch (currentView) {
+      case "homepage":
+        return <HomePageView />
+      case "projects":
+        return <ProjectsView />
+      case "tags":
+        return <TagsView />
+      default:
+        return null
+    }
+  }, [currentView])
   return (
     <div
       className={css`
@@ -35,24 +43,11 @@ export const MainView = () => {
 				flex-direction: column;
 				gap: var(--size-4-2);
 			`}>
-        <div className={css`
-          display: flex;
-          gap: var(--size-4-2);
-          justify-content: flex-end;
-        `}>
-          <RefreshButton />
-          <Button onClick={onClick}>
-            <FiPlus />
-          </Button>
-        </div>
-        <TimerList plugin={plugin} />
-
-        <EntryList />
+        {viewContent}
       </section>
     </div>
   )
 }
-
 
 
 export const TodayTimeline = () => {
@@ -85,4 +80,73 @@ export const TodayTimeline = () => {
       <Timeline items={timelineItems} direction="horizontal" showLabel={false} />
     </div>
   )
+}
+
+
+export const HomePageView = () => {
+  const plugin = usePlugin()
+  const app = plugin.app
+  const switchView = useSetAtom(viewAtom)
+  const onAddTimer = () => {
+    const modal = new TimerDetailModal(app, plugin)
+    modal.open()
+  }
+  const onSwitchToProjectsView = () => {
+    switchView("projects")
+  }
+  return (
+    <>
+      <div className={css`
+          display: flex;
+          gap: var(--size-4-2);
+          justify-content: flex-end;
+        `}>
+        <Button onClick={onSwitchToProjectsView} title="projects">
+          <FiFolder />
+        </Button>
+        <RefreshButton />
+        <Button onClick={onAddTimer} title="add new timer">
+          <FiPlus />
+        </Button>
+      </div>
+      <TimerList plugin={plugin} />
+      <EntryList />
+    </>
+  )
+}
+
+
+export const ProjectsView = () => {
+  const switchView = useSetAtom(viewAtom)
+  const backToHomePage = () => switchView("homepage")
+  const onAddProject = () => {
+
+  }
+  const projects = useAtomValue(activeProjectsAtom)
+  return (
+    <>
+      <div className={css`
+      display: flex;
+      justify-content: space-between;
+    `}>
+        <Button onClick={backToHomePage} title="projects">
+          <FiCornerUpLeft />
+        </Button>
+        <div className={css`
+          display: flex;
+          gap: var(--size-4-2);
+        `}>
+          <Button onClick={onAddProject} title="add new projeect">
+            <FiPlus />
+          </Button>
+        </div>
+      </div>
+      <ProjectList data={projects} />
+    </>
+  )
+}
+
+
+export const TagsView = () => {
+  return null
 }

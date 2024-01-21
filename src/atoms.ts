@@ -17,6 +17,9 @@ export const passedSecondsAtom = atom<number | null>(null)
 
 export const meAtom = atom<Me | null>(null)
 
+// TODO: replace it by router
+export const viewAtom = atom<"homepage" | "projects" | "tags">("homepage")
+
 /*
 	Derived Atoms
 */
