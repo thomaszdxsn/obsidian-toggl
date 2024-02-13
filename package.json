@@ -1,6 +1,6 @@
 {
   "name": "obsidian-toggl",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "integrate toggl with obsidian",
   "main": "main.js",
   "scripts": {

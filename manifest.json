@@ -1,7 +1,7 @@
 {
 	"id": "toggl-track-obsidian",
 	"name": "Toggl Timer",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"minAppVersion": "0.15.0",
 	"description": "Toggl integration for Obsidian",
 	"author": "thomaszdxsn",
