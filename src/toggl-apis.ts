@@ -257,5 +257,7 @@ export class TogglService {
     const interval = setInterval(async () => {
       intervalHandler(() => clearInterval(interval));
     }, intervalTime);
+
+    return interval;
   }
 }
