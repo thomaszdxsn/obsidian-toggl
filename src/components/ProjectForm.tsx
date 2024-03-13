@@ -9,7 +9,7 @@ import { css } from '@emotion/css';
 import { useCreateProjectMutation } from 'src/hooks';
 
 interface Props {
-  onSucecss: () => void
+  onSuccess: () => void
   projectId?: number
 }
 
@@ -30,7 +30,7 @@ const BUILTIN_COLORS = [
   '#525266'
 ]
 
-export const ProjectForm = ({ onSucecss, projectId }: Props) => {
+export const ProjectForm = ({ onSuccess: onSucecss, projectId }: Props) => {
   const projects = useAtomValue(projectsAtom)
   const project = useMemo(() => projects.find(project => project.id === projectId), [projectId])
   const form = useForm({

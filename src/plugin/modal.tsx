@@ -87,7 +87,7 @@ export class ProjectModal extends Modal {
 		const onSuccess = this.close.bind(this)
 		this.root.render(
 			<Provider plugin={this.plugin}>
-				<ProjectForm onSucecss={onSuccess} projectId={this.projectId} />
+				<ProjectForm onSuccess={onSuccess} projectId={this.projectId} />
 			</Provider>
 		)
 	}

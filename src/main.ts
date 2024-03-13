@@ -45,14 +45,10 @@ export default class TogglPlugin extends Plugin {
         new TimerListModal(this.app, this).open();
       },
     });
+    this.app.workspace.onLayoutReady(() => {
+      this.initView()
+    })
 
-    if (this.app.workspace.layoutReady) {
-      await this.initView();
-    } else {
-      this.registerEvent(
-        this.app.workspace.on("layout-change", this.initView.bind(this)),
-      );
-    }
   }
 
   onunload() {
