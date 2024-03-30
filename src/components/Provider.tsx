@@ -4,7 +4,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import type TogglPlugin from "../main"
 import { PluginContext } from "../hooks"
 import { Provider as JotaiProvider } from 'jotai'
-import { AxiosError } from "axios"
 import { Notice } from "obsidian"
 
 interface Props {
@@ -15,10 +14,8 @@ interface Props {
 const queryClient = new QueryClient({
   defaultOptions: {
     mutations: {
-      onError: (error: AxiosError<string>) => {
-        if (error.response?.data) {
-          new Notice(`Toggl API Error: ${error.response.data}`, 5000)
-        }
+      onError: (_error: unknown) => {
+        new Notice(`Toggl API Error`, 5000)
       }
     }
   },

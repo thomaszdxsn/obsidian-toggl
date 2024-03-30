@@ -1,7 +1,4 @@
 import { TimeEntry, Timer } from "./interfaces";
-import dayjs from "dayjs";
-import isTodayPlugin from "dayjs/plugin/isToday";
-dayjs.extend(isTodayPlugin);
 
 export const formatSeconds = (seconds: number) => {
   const hours = Math.floor(seconds / 3600);
@@ -47,7 +44,7 @@ export const formatTime = (
   format = "HH:mm",
   invalidText = "--",
 ) => {
-  const d = dayjs(datetimeStr);
+  const d = window.moment(datetimeStr);
   if (d.isValid()) {
     return d.format(format);
   }
@@ -59,5 +56,5 @@ export const generateTimerId = (timer: Timer) => {
 };
 
 export const isToday = (datetimeStr: string) => {
-  return dayjs(datetimeStr).isToday();
+  return window.moment(datetimeStr).isSame(new Date(), 'day')
 };

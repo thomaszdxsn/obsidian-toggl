@@ -1,7 +1,6 @@
-import axios, { AxiosError, AxiosInstance } from "axios";
-import dayjs from "dayjs";
 import { currentEntryAtom, meAtom, passedSecondsAtom, store } from "./atoms";
 import { Me, Project, Tag, TimeEntry } from "./interfaces";
+import { RequestUrlParam, requestUrl } from "obsidian";
 
 type ProjectParams = Pick<
   Project,
@@ -29,23 +28,109 @@ type ProjectParams = Pick<
   end_date?: string;
 };
 
-export class TogglAPI {
-  private client: AxiosInstance;
 
-  constructor(apiToken: string) {
-    this.client = axios.create({
-      baseURL: "https://api.track.toggl.com/api/",
-      auth: {
-        username: apiToken,
-        password: "api_token",
-      },
-    });
+class HTTPClient {
+  private defaultHeaders?: Record<string, string>;
+  private baseURL?: string;
+
+  constructor({ baseURL, defaultHeaders }: { baseURL?: string, defaultHeaders?: Record<string, string> }) {
+    this.baseURL = baseURL;
+    this.defaultHeaders = defaultHeaders;
   }
 
-  async createProject(data: ProjectParams) {
+  buildURL(path: string) {
+    if (path.startsWith("http")) {
+      return path
+    }
+    if (!this.baseURL) {
+      return path
+    }
+    return `${this.baseURL}${path}`
+  }
+
+  get<T>(config: RequestUrlParam) {
+    return requestUrl({
+      ...config,
+      headers: {
+        ...this.defaultHeaders,
+        ...config.headers
+      },
+      url: this.buildURL(config.url),
+      method: "GET"
+    }).then(resp => resp.json()) as Promise<T>
+  }
+
+  post<T>(config: Omit<RequestUrlParam, "body"> & { body: string | Record<string, any> }) {
+    return requestUrl({
+      ...config,
+      headers: {
+        ...this.defaultHeaders,
+        ...config.headers
+      },
+      url: this.buildURL(config.url),
+      body: JSON.stringify(config.body),
+      method: "POST"
+    }).then(resp => resp.json()) as Promise<T>
+  }
+
+  put<T>(config: Omit<RequestUrlParam, "body"> & { body: string | Record<string, any> }) {
+    return requestUrl({
+      ...config,
+      headers: {
+        ...this.defaultHeaders,
+        ...config.headers
+      },
+      url: this.buildURL(config.url),
+      body: JSON.stringify(config.body),
+      method: "PUT"
+    }).then(resp => resp.json()) as Promise<T>
+  }
+
+  patch<T>(config: Omit<RequestUrlParam, "body"> & { body?: string | Record<string, any> }) {
+    return requestUrl({
+      ...config,
+      headers: {
+        ...this.defaultHeaders,
+        ...config.headers
+      },
+      url: this.buildURL(config.url),
+      body: JSON.stringify(config.body),
+      method: "PATCH"
+    }).then(resp => resp.json()) as Promise<T>
+  }
+
+  delete<T>(config: RequestUrlParam) {
+    return requestUrl({
+      ...config,
+      headers: {
+        ...this.defaultHeaders,
+        ...config.headers
+      },
+      url: this.buildURL(config.url),
+      method: "DELETE"
+    }).then(resp => resp.json()) as Promise<T>
+  }
+}
+
+
+export class TogglAPI {
+  private client: HTTPClient;
+
+  constructor(apiToken: string) {
+    this.client = new HTTPClient({
+      baseURL: "https://api.track.toggl.com/api/",
+      defaultHeaders: {
+        Authorization: `Basic ${btoa(`${apiToken}:api_token`)}`
+      }
+    })
+  }
+
+  async createProject(body: ProjectParams) {
     const response = await this.client.post<Project>(
-      `v9/workspaces/${data.workspace_id}/projects`,
-      data,
+      {
+        url: `v9/workspaces/${body.workspace_id}/projects`,
+        body
+      }
     );
     return response;
   }
@@ -57,10 +142,10 @@ export class TogglAPI {
     projectId: number;
     data: ProjectParams;
   }) {
-    const response = await this.client.put<Project>(
-      `v9/workspaces/${data.workspace_id}/projects/${projectId}`,
-      data,
-    );
+    const response = await this.client.put<Project>({
+      url: `v9/workspaces/${data.workspace_id}/projects/${projectId}`,
+      body: data
+    })
     return response;
   }
 
@@ -72,7 +157,9 @@ export class TogglAPI {
     projectId: number;
   }) {
     const response = await this.client.delete(
-      `v9/workspaces/${workspaceId}/projects/${projectId}`,
+      {url: 
+        `v9/workspaces/${workspaceId}/projects/${projectId}`
+      }
     );
     return response;
   }
@@ -84,14 +171,14 @@ export class TogglAPI {
     workspaceId: number;
     name: string;
   }) {
-    const response = await this.client.post<Tag>(
-      `v9/workspaces/${workspaceId}/tags`,
-      {
+    const response = await this.client.post<Tag>({
+      url: `v9/workspaces/${workspaceId}/tags`,
+      body: {
         workspaceId,
         name,
       },
-    );
-    return response;
+    })
+    return response
   }
 
   async updateTag({
@@ -103,14 +190,14 @@ export class TogglAPI {
     tagId: number;
     name: string;
   }) {
-    const response = await this.client.put<Tag>(
-      `v9/workspaces/${workspaceId}/tags/${tagId}`,
-      {
+    const response = await this.client.put<Tag>({
+      url: `v9/workspaces/${workspaceId}/tags/${tagId}`,
+      body: {
         workspaceId,
         name,
-      },
-    );
-    return response;
+      }
+    })
+    return response
   }
 
   async deleteTag({
@@ -120,25 +207,26 @@ export class TogglAPI {
     workspaceId: number;
     tagId: number;
   }) {
-    const response = await this.client.delete(
-      `v9/workspaces/${workspaceId}/tags/${tagId}`,
-    );
+    const response = await this.client.delete({
+      url: `v9/workspaces/${workspaceId}/tags/${tagId}`
+    })
     return response;
   }
 
   async getCurrentTimeEntry() {
-    const response = await this.client.get<TimeEntry | null>(
-      "v9/me/time_entries/current",
-    );
+    const response = await this.client.get<TimeEntry | null>({
+      url: "v9/me/time_entries/current"
+    })
     return response;
   }
 
   async getMe(withRelatedData = true) {
-    const response = await this.client.get<Me>("v9/me", {
-      params: {
-        with_related_data: withRelatedData.toString(),
-      },
+    const params = new URLSearchParams({
+      with_related_data: withRelatedData.toString(),
     });
+    const response = await this.client.get<Me>({
+      url: `v9/me?${params.toString()}`
+    })
     return response;
   }
 
@@ -149,9 +237,9 @@ export class TogglAPI {
     timeEntryId: number;
     workspaceId: number;
   }) {
-    const response = await this.client.patch<TimeEntry>(
-      `v9/workspaces/${workspaceId}/time_entries/${timeEntryId}/stop`,
-    );
+    const response = await this.client.patch<TimeEntry>({
+      url: `v9/workspaces/${workspaceId}/time_entries/${timeEntryId}/stop`
+    })
     return response;
   }
 
@@ -196,10 +284,8 @@ export class TogglAPI {
     userId?: number;
     wid?: number;
   }) {
-    const response = await this.client.post<TimeEntry>(
-      `v9/workspaces/${workspaceId}/time_entries`,
-      {
-        workspace_id: workspaceId,
+    const body = {
+      workspace_id: workspaceId,
         duration,
         duronly,
         pid,
@@ -218,8 +304,11 @@ export class TogglAPI {
         uid,
         user_id: userId,
         wid,
-      },
-    );
+    }
+    const response = await this.client.post<TimeEntry>({
+      url: `v9/workspaces/${workspaceId}/time_entries`,
+      body
+    })
     return response;
   }
 }
@@ -238,11 +327,11 @@ export class TogglService {
           this.api.getCurrentTimeEntry(),
           this.api.getMe(),
         ] as const);
-        store.set(currentEntryAtom, currentEntry.data);
-        store.set(meAtom, me.data);
+        store.set(currentEntryAtom, currentEntry);
+        store.set(meAtom, me);
 
-        const passedSeconds = currentEntry.data?.start
-          ? dayjs().diff(dayjs(currentEntry.data.start), "second")
+        const passedSeconds = currentEntry?.start
+          ? window.moment().diff(window.moment(currentEntry.start), "second")
           : null;
         store.set(passedSecondsAtom, passedSeconds);
       } catch (error) {
@@ -254,8 +343,8 @@ export class TogglService {
     // run immediately on first call
     intervalHandler();
 
-    const interval = setInterval(async () => {
-      intervalHandler(() => clearInterval(interval));
+    const interval = window.setInterval(async () => {
+      intervalHandler(() => window.clearInterval(interval));
     }, intervalTime);
 
     return interval;
