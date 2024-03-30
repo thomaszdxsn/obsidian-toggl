@@ -22,8 +22,8 @@ export default class TogglPlugin extends Plugin {
   public settings: PluginSettings;
   public togglService: TogglService;
   private statusBarItem: HTMLElement | null = null;
-  private tickInterval: NodeJS.Timer | null = null;
-  private serviceTickInterval: NodeJS.Timer | null = null;
+  private tickInterval: number | null = null;
+  private serviceTickInterval: number | null = null;
   private statusUnsubscriber: (() => void) | null = null;
   private savedTimersUnsubscriber: (() => void) | null = null;
   private pluginData: PluginData;
@@ -35,7 +35,7 @@ export default class TogglPlugin extends Plugin {
     this.startTick();
     this.showStatusBarItem();
     this.registerView(VIEW_TYPE_TOGGL, (leaf) => new TogglView(leaf, this));
-    this.addRibbonIcon("dice", "Activate Toggl View", () => {
+    this.addRibbonIcon("clock", "Activate toggl view", () => {
       this.initView();
     });
     this.addCommand({
@@ -53,13 +53,13 @@ export default class TogglPlugin extends Plugin {
 
   onunload() {
     if (this.tickInterval) {
-      clearInterval(this.tickInterval);
+      window.clearInterval(this.tickInterval);
     }
     if (this.savedTimersUnsubscriber) {
       this.savedTimersUnsubscriber();
     }
     if (this.serviceTickInterval) {
-      clearInterval(this.serviceTickInterval);
+      window.clearInterval(this.serviceTickInterval);
     }
   }
 

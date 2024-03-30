@@ -6,7 +6,6 @@ import { currentEntryAtom, meAtom, passedSecondsAtom } from "./atoms"
 import { produce } from "immer"
 import { isActiveEntry } from "./utils"
 import { Timer } from "./interfaces"
-import dayjs from "dayjs"
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 export const PluginContext = createContext<TogglPlugin>(null!)
@@ -21,7 +20,7 @@ export const useStopTimerMutation = (timerId?: string) => {
 	return useMutation({
 		mutationFn: (params: { timeEntryId: number, workspaceId: number }) => plugin.togglService.api.stopTimeEntry(params),
 		mutationKey: ["stopTimeTimer", timerId],
-		onSuccess: ({ data }) => {
+		onSuccess: (data) => {
 			setMe((me) => produce(me, (draft) => {
 				if (!draft) {
 					return
@@ -44,7 +43,7 @@ export const useRefreshMutation = () => {
 	return useMutation({
 		mutationFn: () => plugin.togglService.api.getMe(),
 		mutationKey: ["refresh"],
-		onSuccess: ({ data }) => {
+		onSuccess: (data) => {
 			setMe(data)
 			const currentEntry = data.time_entries.find(e => e.duration === -1) ?? null
 			setCurrentEntry(currentEntry)
@@ -67,13 +66,13 @@ export const useStartTimerMutation = (onSuccess?: () => void) => {
 			createdWith: "obsidian-toggl-plugin"
 		}),
 		onSuccess: (entry) => {
-			setPassedSeconds(dayjs().diff(dayjs(entry.data.start), 'seconds'))
-			setCurrentEntry(entry.data)
+			setPassedSeconds(window.moment().diff(window.moment(entry.start), 'seconds'))
+			setCurrentEntry(entry)
 			onSuccess?.()
 			setMe(prev => produce(prev, draft => {
 				if (draft) {
 					const oldEntries = (draft?.time_entries ?? []).filter(entry => !isActiveEntry(entry))
-					draft.time_entries = [...oldEntries, entry.data]
+					draft.time_entries = [...oldEntries, entry]
 				}
 				return draft
 			}))
@@ -105,7 +104,7 @@ export const useCreateProjectMutation = () => {
 		onSuccess: (project) => {
 			setMe(prev => produce(prev, draft => {
 				if (draft) {
-					draft.projects.push(project.data)
+					draft.projects.push(project)
 				}
 				return draft
 			}))
@@ -124,7 +123,7 @@ export const useCreateTagMutation = () => {
 		onSuccess: (tag) => {
 			setMe(prev => produce(prev, draft => {
 				if (draft) {
-					draft.tags.push(tag.data)
+					draft.tags.push(tag)
 				}
 				return draft
 			}))

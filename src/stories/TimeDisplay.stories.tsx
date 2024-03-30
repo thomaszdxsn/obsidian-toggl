@@ -26,10 +26,10 @@ export const Countdown: Story = {
   render: () => {
     const [seconds, setSeconds] = React.useState(0)
     React.useEffect(() => {
-      const interval = setInterval(() => {
+      const interval = window.setInterval(() => {
         setSeconds(seconds => seconds + 1)
       }, 1000)
-      return () => clearInterval(interval)
+      return () => window.clearInterval(interval)
     }, [])
     return <TimeDisplay>{formatSeconds(seconds)}</TimeDisplay>
   }

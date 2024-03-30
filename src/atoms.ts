@@ -1,6 +1,5 @@
 import { atom, createStore } from "jotai";
 import type { Me, TimeEntry, Timer } from "./interfaces";
-import dayjs from "dayjs";
 import { formatSeconds, isSameTimer, isToday } from "./utils";
 
 /*
@@ -88,13 +87,13 @@ export const currentEntryProjectAtom = atom((get) => {
 */
 
 export const tick = () => {
-  const interval = setInterval(() => {
+  const interval = window.setInterval(() => {
     const currentEntry = store.get(currentEntryAtom);
     if (!currentEntry) {
       store.set(passedSecondsAtom, null);
       return;
     }
-    const passedSeconds = dayjs().diff(dayjs(currentEntry.start), "second");
+    const passedSeconds = window.moment().diff(window.moment(currentEntry.start), "second");
     store.set(passedSecondsAtom, passedSeconds);
   }, 1000);
   return interval;

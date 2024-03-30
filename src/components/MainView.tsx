@@ -8,7 +8,6 @@ import { FiCornerUpLeft, FiFolder, FiPlus, FiTag } from 'react-icons/fi'
 import { Button } from "./Button"
 import { useAtomValue, useSetAtom } from "jotai"
 import { activeProjectsAtom, projectDictAtom, tagsAtom, todayTimeEntriesAtom, viewAtom } from "src/atoms"
-import dayjs from "dayjs"
 import { Timeline } from "./Timeline"
 import { RefreshButton } from "./RefreshButton"
 import { EntryList } from "./EntryList"
@@ -56,12 +55,12 @@ export const TodayTimeline = () => {
   const projectDict = useAtomValue(projectDictAtom)
   const timelineItems = useMemo(() => {
     const total = entries.reduce((acc, entry) => {
-      const duration = entry.duration !== -1 ? entry.duration : dayjs().diff(entry.start, "second")
+      const duration = entry.duration !== -1 ? entry.duration : window.moment().diff(entry.start, "second")
       return acc + duration
     }, 0)
     return entries.sort((a, b) => a.start < b.start ? - 1 : 1).map(entry => {
       const project = entry.project_id ? projectDict[entry.project_id] : null
-      const duration = entry.duration !== -1 ? entry.duration : dayjs().diff(entry.start, "second")
+      const duration = entry.duration !== -1 ? entry.duration : window.moment().diff(entry.start, "second")
       const percentage = duration / total
       return {
         color: project?.color || "var(--background-primary)",
