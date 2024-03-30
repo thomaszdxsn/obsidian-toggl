@@ -1,0 +1,58 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render placeholder if current is not a timer exist 1`] = `
+<div>
+  <div
+    class="css-19wm461"
+  >
+    placeholder
+  </div>
+</div>
+`;
+
+exports[`should render timer if current is a timer exist 1`] = `
+<div>
+  <div
+    class="css-13b75w3"
+  >
+    <button
+      class="css-1440elo css-zhmpa0"
+    >
+      <svg
+        fill="none"
+        height="1em"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="1em"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect
+          height="16"
+          width="4"
+          x="6"
+          y="4"
+        />
+        <rect
+          height="16"
+          width="4"
+          x="14"
+          y="4"
+        />
+      </svg>
+    </button>
+    <div
+      class="css-1l0vno7"
+    >
+      <div />
+      <div
+        class="css-4dyp2g css-1yap1d"
+      >
+        01:00:00
+      </div>
+    </div>
+  </div>
+</div>
+`;

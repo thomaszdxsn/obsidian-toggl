@@ -1,4 +1,8 @@
+import React, { StrictMode } from "react";
 import { TimeEntry, Timer } from "./interfaces";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {Provider as JotaiProvider}from 'jotai'
+import { store } from "./atoms";
 
 export const formatSeconds = (seconds: number) => {
   const hours = Math.floor(seconds / 3600);
@@ -58,3 +62,16 @@ export const generateTimerId = (timer: Timer) => {
 export const isToday = (datetimeStr: string) => {
   return window.moment(datetimeStr).isSame(new Date(), 'day')
 };
+
+export const TestingProvider = ({ children }: {children: React.ReactNode}) => {
+  const queryClient = new QueryClient()
+  return (
+    <StrictMode>
+      <JotaiProvider store={store}>
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+      </JotaiProvider>
+    </StrictMode>
+  )
+}

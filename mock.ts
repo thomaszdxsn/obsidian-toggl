@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker'
-import { Project, TimeEntry } from 'src/interfaces'
+import { Me, Project, TimeEntry } from 'src/interfaces'
 
 
-export function createRandomTimeEntry(): TimeEntry {
+export function createRandomTimeEntry(defaultValues?: Partial<TimeEntry>): TimeEntry {
   return {
     id: faker.number.int(),
     pid: faker.number.int(),
@@ -23,10 +23,11 @@ export function createRandomTimeEntry(): TimeEntry {
     uid: faker.number.int(),
     tid: faker.number.int(),
     workspace_id: faker.number.int(),
+    ...defaultValues
   }
 }
 
-export function createRandomProject(): Project {
+export function createRandomProject(defaultValues: Partial<Project>): Project {
   return {
     id: faker.number.int(),
     wid: faker.number.int(),
@@ -59,5 +60,38 @@ export function createRandomProject(): Project {
     server_deleted_at: faker.date.recent().toISOString(),
     status: faker.lorem.word(),
     workspace_id: faker.number.int(),
+    ...defaultValues
+  }
+}
+
+export function createRandomMe(defaultValues?: Partial<Me>): Me {
+  return {
+    api_token: faker.lorem.word(),
+    at: faker.date.recent().toISOString(),
+    beginning_of_week: faker.number.int(),
+    clients: [],
+    country_id: faker.number.int(),
+    created_at: faker.date.recent().toISOString(),
+    default_workspace_id: faker.number.int(),
+    email: faker.internet.email(),
+    fullname: faker.person.fullName(),
+    has_password: faker.datatype.boolean(),
+    id: faker.number.int(),
+    image_url: faker.internet.url(),
+    intercom_hash: faker.lorem.word(),
+    oauth_providers: [],
+    openid_enabled: faker.datatype.boolean(),
+    openid_email: faker.internet.email(),
+    options: {
+      additionalProperties: {}
+    },
+    projects: [],
+    tags: [],
+    tasks: [],
+    time_entries: [],
+    timezone: faker.date.anytime().toISOString(),
+    updated_at: faker.date.recent().toISOString(),
+    workspaces: [], 
+    ...defaultValues
   }
 }
