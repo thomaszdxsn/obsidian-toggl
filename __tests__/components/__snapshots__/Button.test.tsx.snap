@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render children if isLoading=false 1`] = `
+<div>
+  <button
+    class="css-1440elo"
+  >
+    Click me
+  </button>
+</div>
+`;
+
+exports[`should render loading icon if isLoading=true 1`] = `
+<div>
+  <button
+    class="css-jji6i8"
+    disabled=""
+  >
+    <span
+      data-testid="loading-icon"
+      style="width: 13px; height: 13px; border-radius: 100%; border: 2px solid; border-top-color: #000000; border-bottom-color: transparent; border-left-color: #000000; border-right-color: #000000; display: inline-block; animation: react-spinners-ClipLoader-clip 0.75s 0s infinite linear; animation-fill-mode: both;"
+    />
+  </button>
+</div>
+`;

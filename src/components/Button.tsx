@@ -21,6 +21,7 @@ export const Button = ({ children, isLoading, loadingIconSize = 13, className, .
     }
   >{isLoading ?
     <ClipLoader size={loadingIconSize}
+      data-testid="loading-icon"
       cssOverride={{
         borderColor: "var(--accent-h)",
       }}

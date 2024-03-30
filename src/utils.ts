@@ -44,7 +44,7 @@ export const formatTime = (
   format = "HH:mm",
   invalidText = "--",
 ) => {
-  const d = window.moment(datetimeStr);
+  const d = window.moment(datetimeStr, true);
   if (d.isValid()) {
     return d.format(format);
   }

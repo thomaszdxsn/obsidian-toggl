@@ -5,6 +5,7 @@ import {
   isSameTimer,
   formatTime,
   isToday,
+  generateTimerId
 } from "../src/utils";
 
 it("formatSeconds", () => {
@@ -82,3 +83,17 @@ describe("isToday", () => {
     expect(isToday(todayISO)).toBeTruthy();
   });
 });
+
+
+describe("generateTimerId", () => {
+  it("generate timer id", () => {
+    const timer = {
+      projectId: 1,
+      description: "test",
+      tagIds: [1, 2, 3],
+      projectName: "123",
+      tags: ["123", "456", "789"],
+    };
+    expect(generateTimerId(timer)).toBe("1-test-1,2,3");
+  });
+})
