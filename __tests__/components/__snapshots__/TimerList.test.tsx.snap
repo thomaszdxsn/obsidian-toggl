@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render correctly 1`] = `
+<div>
+  <div
+    class="css-1jqry03"
+  >
+    <section
+      class="css-18foawe"
+    >
+      <div
+        class="css-1pqyin1"
+      >
+        <div
+          style="color: rgb(71, 119, 2);"
+        >
+          Project Name
+        </div>
+        <div
+          class="css-y89s61"
+        >
+          Candidus caste cerno combibo pecto coruscus adiuvo timor crebro.
+        </div>
+        <div
+          class="css-1pbu1sv"
+        >
+          reprehenderit
+        </div>
+      </div>
+      <div
+        class="css-1onrrkk"
+      >
+        <div
+          class="css-4dyp2g css-ltzhbi"
+        />
+        <button
+          class="css-1440elo"
+        >
+          <svg
+            fill="none"
+            height="1em"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <polygon
+              points="5 3 19 12 5 21 5 3"
+            />
+          </svg>
+        </button>
+      </div>
+    </section>
+  </div>
+</div>
+`;

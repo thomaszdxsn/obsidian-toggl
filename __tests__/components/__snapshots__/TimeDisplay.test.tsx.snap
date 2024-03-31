@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render correctly 1`] = `
+<div>
+  <div
+    class="css-4dyp2g"
+  >
+    10:00
+  </div>
+</div>
+`;

@@ -21,6 +21,8 @@ const queryClient = new QueryClient({
   },
 })
 
+
+
 export const Provider = ({ children, plugin }: Props) => {
   return (
     <StrictMode>

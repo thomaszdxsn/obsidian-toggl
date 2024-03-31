@@ -9,7 +9,6 @@ export const EntryList = () => {
   const todayEntries = useAtomValue(todayTimeEntriesAtom);
   const entries = todayEntries.filter((entry) => !isActiveEntry(entry));
   const projectDict = useAtomValue(projectDictAtom);
-  console.log({ entries });
   return (
     <div
       className={css`

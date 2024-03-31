@@ -12,7 +12,7 @@ import { css } from "@emotion/css";
 import { FiPause } from "react-icons/fi";
 import { TimeDisplay } from "./TimeDisplay";
 import { Button } from "./Button";
-import { generateTimerId } from "src/utils";
+import { generateTimerId } from "../utils";
 
 export const CurrentTimer = ({
   placeholder = "No time entry running",

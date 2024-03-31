@@ -63,7 +63,7 @@ export const projectDictAtom = atom((get) => {
   return Object.fromEntries(projects.map((project) => [project.id, project]));
 });
 
-const myTimeEntriesAtom = atom((get) => {
+export const myTimeEntriesAtom = atom((get) => {
   const me = get(meAtom);
   return me?.time_entries ?? [];
 });
