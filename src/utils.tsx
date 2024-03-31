@@ -28,6 +28,7 @@ export const isSameTimer = ({
   timer: Timer;
   entry: TimeEntry;
 }) => {
+  console.log({timer, entry})
   return (
     timer.projectId === entry.project_id &&
     timer.description === entry.description &&
