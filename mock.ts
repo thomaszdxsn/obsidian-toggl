@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { Me, Project, TimeEntry } from 'src/interfaces'
+import { Me, Project, Tag, TimeEntry, Timer } from 'src/interfaces'
 
 
 export function createRandomTimeEntry(defaultValues?: Partial<TimeEntry>): TimeEntry {
@@ -27,7 +27,7 @@ export function createRandomTimeEntry(defaultValues?: Partial<TimeEntry>): TimeE
   }
 }
 
-export function createRandomProject(defaultValues: Partial<Project>): Project {
+export function createRandomProject(defaultValues?: Partial<Project>): Project {
   return {
     id: faker.number.int(),
     wid: faker.number.int(),
@@ -92,6 +92,28 @@ export function createRandomMe(defaultValues?: Partial<Me>): Me {
     timezone: faker.date.anytime().toISOString(),
     updated_at: faker.date.recent().toISOString(),
     workspaces: [], 
+    ...defaultValues
+  }
+}
+
+export function createRandomTag(defaultValues?: Partial<Tag>): Tag {
+  return {
+    id: faker.number.int(),
+    deleted_at: "",
+    name: faker.lorem.word(),
+    at: faker.date.recent().toISOString(),
+    workspace_id: faker.number.int(),
+    ...defaultValues
+  }
+}
+
+export function createRandomTimer(defaultValues?: Partial<Timer>): Timer {
+  return {
+    projectId: faker.number.int(),
+    projectName: faker.lorem.word(),
+    tagIds: [faker.number.int()],
+    tags: [faker.lorem.word()],
+    description: faker.lorem.sentence(),
     ...defaultValues
   }
 }

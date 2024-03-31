@@ -53,6 +53,7 @@ export const Timeline = ({ className, direction, gap = 0, showLabel = true, roun
         }
         return <div key={index}
           style={containerStyle}
+          data-testid="timeline-item"
           className={clsx(
             css`
           display: flex;

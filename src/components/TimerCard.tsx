@@ -11,8 +11,8 @@ import { css } from "@emotion/css";
 import { FiPause, FiPlay } from "react-icons/fi";
 import { Button } from "./Button";
 import { TimeDisplay } from "./TimeDisplay";
-import { formatSeconds, generateTimerId, isSameTimer } from "src/utils";
-import { useStartTimerMutation, useStopTimerMutation } from "src/hooks";
+import { formatSeconds, generateTimerId, isSameTimer } from "../utils";
+import { useStartTimerMutation, useStopTimerMutation } from "../hooks";
 
 interface Props {
   timer: Timer;

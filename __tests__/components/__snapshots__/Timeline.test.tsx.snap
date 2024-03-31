@@ -1,0 +1,108 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`don't render label when showLabel=false 1`] = `
+<div>
+  <div
+    class="css-1qrem7f"
+  >
+    <div
+      class="css-6uk4c3"
+      data-testid="timeline-item"
+      style="height: 100%; width: 50%;"
+    >
+      <div
+        class="css-eojgqr"
+        style="background-color: red; height: 4px; border-start-start-radius: 1rem; border-end-start-radius: 1rem;"
+      />
+    </div>
+    <div
+      class="css-6uk4c3"
+      data-testid="timeline-item"
+      style="height: 100%; width: 50%;"
+    >
+      <div
+        class="css-eojgqr"
+        style="background-color: blue; height: 4px;"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`itemClassName should assign to each timeline item 1`] = `
+<div>
+  <div
+    class="css-1qrem7f"
+  >
+    <div
+      class="css-6uk4c3 item-class"
+      data-testid="timeline-item"
+      style="height: 100%; width: 50%;"
+    >
+      <div
+        class="css-eojgqr"
+        style="background-color: red; height: 4px; border-start-start-radius: 1rem; border-end-start-radius: 1rem;"
+      />
+      <div
+        class="css-6r6476"
+      >
+        Item 1
+      </div>
+    </div>
+    <div
+      class="css-6uk4c3 item-class"
+      data-testid="timeline-item"
+      style="height: 100%; width: 50%;"
+    >
+      <div
+        class="css-eojgqr"
+        style="background-color: blue; height: 4px;"
+      />
+      <div
+        class="css-6r6476"
+      >
+        Item 2
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`render label when showLabel=true 1`] = `
+<div>
+  <div
+    class="css-1qrem7f"
+  >
+    <div
+      class="css-6uk4c3"
+      data-testid="timeline-item"
+      style="height: 100%; width: 50%;"
+    >
+      <div
+        class="css-eojgqr"
+        style="background-color: red; height: 4px; border-start-start-radius: 1rem; border-end-start-radius: 1rem;"
+      />
+      <div
+        class="css-6r6476"
+      >
+        Item 1
+      </div>
+    </div>
+    <div
+      class="css-6uk4c3"
+      data-testid="timeline-item"
+      style="height: 100%; width: 50%;"
+    >
+      <div
+        class="css-eojgqr"
+        style="background-color: blue; height: 4px;"
+      />
+      <div
+        class="css-6r6476"
+      >
+        Item 2
+      </div>
+    </div>
+  </div>
+</div>
+`;
