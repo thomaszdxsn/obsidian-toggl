@@ -82,13 +82,17 @@ export default class TogglPlugin extends Plugin {
 
   async initView() {
     const { workspace } = this.app;
-    let leaf: WorkspaceLeaf;
+    let leaf: WorkspaceLeaf
     const leaves = workspace.getLeavesOfType(VIEW_TYPE_TOGGL);
 
     if (leaves.length > 0) {
       leaf = leaves[0];
     } else {
-      leaf = workspace.getRightLeaf(false);
+      const rightLeaf = workspace.getRightLeaf(false);
+      if (!rightLeaf) {
+        return
+      }
+      leaf = rightLeaf
       await leaf.setViewState({
         type: VIEW_TYPE_TOGGL,
         active: true,
