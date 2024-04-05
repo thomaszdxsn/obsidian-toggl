@@ -9,11 +9,14 @@ import { TestingProvider } from "../../src/utils";
 
 it("render correctly", () => {
   const project = createRandomProject({
-    name: "Project Name"
+    name: "Project Name",
+    color: "red",
   })
   const timers = [createRandomTimer({
     projectId: project.id,
-    projectName: project.name
+    projectName: project.name,
+    description: "123",
+    tags: []
   })]
   const me = createRandomMe({
     projects: [project]
